@@ -1,10 +1,32 @@
-import StatCard from "../components/StatCard"
-import TransactionCard from "../components/TransactionCard"
+import { useState } from "react";
+import ExpenseForm from "../components/ExpenseForm";
+import StatCard from "../components/StatCard";
 
 function Dashboard() {
+
+  const [expenses, setExpenses] = useState([
+    {
+      id: 1,
+      title: "Swiggy Order",
+      amount: 450,
+      category: "Food",
+    },
+    {
+      id: 2,
+      title: "Uber Ride",
+      amount: 220,
+      category: "Transport",
+    },
+  ]);
+
+  const addExpense = (expense) => {
+    setExpenses([expense, ...expenses]);
+  };
+
   return (
     <div>
       <div className="mb-10">
+        <ExpenseForm addExpense={addExpense} />
         <h1 className="text-4xl font-bold text-white mb-3">
           Welcome Back 👋
         </h1>
@@ -44,27 +66,28 @@ function Dashboard() {
         </div>
 
         <div className="space-y-4">
-          <TransactionCard
-            title="Swiggy Order"
-            category="Food"
-            amount="450"
-            date="Today"
-          />
+          {expenses.map((expense) => (
+            <div
+              key={expense.id}
+              className="bg-[#111827] border border-gray-800 rounded-2xl p-5 flex justify-between items-center"
+            >
+              <div>
+                <h3 className="text-white text-xl font-semibold">
+                  {expense.title}
+                </h3>
 
-          <TransactionCard
-            title="Uber Ride"
-            category="Transport"
-            amount="220"
-            date="Yesterday"
-          />
+                <p className="text-gray-400">
+                  {expense.category}
+                </p>
+              </div>
 
-          <TransactionCard
-            title="Netflix Subscription"
-            category="Entertainment"
-            amount="649"
-            date="2 days ago"
-          />
+              <h2 className="text-red-400 text-2xl font-bold">
+                ₹{expense.amount}
+              </h2>
+            </div>
+          ))}
         </div>
+
       </div>
     </div>
   )
