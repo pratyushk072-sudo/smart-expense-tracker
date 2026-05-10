@@ -1,4 +1,5 @@
 import StatCard from "../components/StatCard"
+import TransactionCard from "../components/TransactionCard"
 
 function Dashboard() {
   return (
@@ -13,7 +14,7 @@ function Dashboard() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
         <StatCard
           title="Total Balance"
           amount="₹45,000"
@@ -33,6 +34,37 @@ function Dashboard() {
           title="Budget Left"
           amount="₹7,500"
         />
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white">
+            Recent Transactions
+          </h2>
+        </div>
+
+        <div className="space-y-4">
+          <TransactionCard
+            title="Swiggy Order"
+            category="Food"
+            amount="450"
+            date="Today"
+          />
+
+          <TransactionCard
+            title="Uber Ride"
+            category="Transport"
+            amount="220"
+            date="Yesterday"
+          />
+
+          <TransactionCard
+            title="Netflix Subscription"
+            category="Entertainment"
+            amount="649"
+            date="2 days ago"
+          />
+        </div>
       </div>
     </div>
   )
