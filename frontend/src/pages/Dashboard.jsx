@@ -1,23 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ExpenseForm from "../components/ExpenseForm";
 import StatCard from "../components/StatCard";
 
 function Dashboard() {
 
-  const [expenses, setExpenses] = useState([
-    {
-      id: 1,
-      title: "Swiggy Order",
-      amount: 450,
-      category: "Food",
-    },
-    {
-      id: 2,
-      title: "Uber Ride",
-      amount: 220,
-      category: "Transport",
-    },
-  ]);
+  const [expenses, setExpenses] = useState(() => {
+    const savedExpenses = localStorage.getItem("expenses");
+
+    return savedExpenses
+      ? JSON.parse(savedExpenses)
+      : [
+        {
+          id: 1,
+          title: "Swiggy Order",
+          amount: 450,
+          category: "Food",
+        },
+        {
+          id: 2,
+          title: "Uber Ride",
+          amount: 220,
+          category: "Transport",
+        },
+      ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+  }, [expenses]);
 
   const addExpense = (expense) => {
     setExpenses([expense, ...expenses]);
