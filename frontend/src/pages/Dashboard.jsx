@@ -23,6 +23,14 @@ function Dashboard() {
     setExpenses([expense, ...expenses]);
   };
 
+  const deleteExpense = (id) => {
+    const updatedExpenses = expenses.filter(
+      (expense) => expense.id !== id
+    );
+
+    setExpenses(updatedExpenses);
+  };
+
   return (
     <div>
       <div className="mb-10">
@@ -81,9 +89,18 @@ function Dashboard() {
                 </p>
               </div>
 
-              <h2 className="text-red-400 text-2xl font-bold">
-                ₹{expense.amount}
-              </h2>
+              <div className="flex items-center gap-4">
+                <h2 className="text-red-400 text-2xl font-bold">
+                  ₹{expense.amount}
+                </h2>
+
+                <button
+                  onClick={() => deleteExpense(expense.id)}
+                  className="bg-red-500 hover:bg-red-600 px-3 py-2 rounded-lg text-white"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>
