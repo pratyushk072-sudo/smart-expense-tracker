@@ -33,6 +33,17 @@ function Dashboard() {
     setExpenses([expense, ...expenses]);
   };
 
+  const totalExpenses = expenses.reduce(
+    (total, expense) => total + expense.amount,
+    0
+  );
+  
+  const totalBalance = 45000;
+  
+  const savings = totalBalance - totalExpenses;
+  
+  const budgetLeft = 20000 - totalExpenses;
+
   const deleteExpense = (id) => {
     const updatedExpenses = expenses.filter(
       (expense) => expense.id !== id
@@ -57,22 +68,22 @@ function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
         <StatCard
           title="Total Balance"
-          amount="₹45,000"
+          amount={`₹${totalBalance}`}
         />
 
         <StatCard
           title="Monthly Expenses"
-          amount="₹12,500"
+          amount={`₹${totalExpenses}`}
         />
 
         <StatCard
           title="Savings"
-          amount="₹32,500"
+          amount={`₹${savings}`}
         />
 
         <StatCard
           title="Budget Left"
-          amount="₹7,500"
+          amount={`₹${budgetLeft}`}
         />
       </div>
 

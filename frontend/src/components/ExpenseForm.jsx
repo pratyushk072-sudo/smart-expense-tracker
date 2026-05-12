@@ -16,7 +16,7 @@ const ExpenseForm = ({ addExpense }) => {
     const newExpense = {
       id: Date.now(),
       title,
-      amount,
+      amount: Number(amount),
       category,
     };
 
