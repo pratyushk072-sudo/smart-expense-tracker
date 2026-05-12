@@ -62,6 +62,7 @@ const ExpenseForm = ({ addExpense }) => {
         <option value="Transport">Transport</option>
         <option value="Shopping">Shopping</option>
         <option value="Entertainment">Entertainment</option>
+        <option value="Bills">Bills</option>
       </select>
 
       <button

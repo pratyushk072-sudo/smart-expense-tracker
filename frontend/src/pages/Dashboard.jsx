@@ -4,6 +4,8 @@ import StatCard from "../components/StatCard";
 
 function Dashboard() {
 
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
   const [expenses, setExpenses] = useState(() => {
     const savedExpenses = localStorage.getItem("expenses");
 
@@ -37,12 +39,28 @@ function Dashboard() {
     (total, expense) => total + expense.amount,
     0
   );
-  
+
   const totalBalance = 45000;
-  
+
   const savings = totalBalance - totalExpenses;
-  
+
   const budgetLeft = 20000 - totalExpenses;
+
+  const categories = [
+    "All",
+    "Food",
+    "Transport",
+    "Entertainment",
+    "Shopping",
+    "Bills",
+  ];
+
+  const filteredExpenses =
+    selectedCategory === "All"
+      ? expenses
+      : expenses.filter(
+        (expense) => expense.category === selectedCategory
+      );
 
   const deleteExpense = (id) => {
     const updatedExpenses = expenses.filter(
@@ -87,6 +105,21 @@ function Dashboard() {
         />
       </div>
 
+      <div className="flex gap-3 flex-wrap mb-8">
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            className={`px-5 py-2 rounded-xl font-medium transition-all ${selectedCategory === category
+                ? "bg-blue-500 text-white"
+                : "bg-[#111827] text-gray-300"
+              }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
       <div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white">
@@ -95,7 +128,7 @@ function Dashboard() {
         </div>
 
         <div className="space-y-4">
-          {expenses.map((expense) => (
+          {filteredExpenses.map((expense) => (
             <div
               key={expense.id}
               className="bg-[#111827] border border-gray-800 rounded-2xl p-5 flex justify-between items-center"
@@ -125,7 +158,6 @@ function Dashboard() {
             </div>
           ))}
         </div>
-
       </div>
     </div>
   )
