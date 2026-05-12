@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ExpenseForm from "../components/ExpenseForm";
 import StatCard from "../components/StatCard";
+import ExpenseChart from "../components/ExpenseChart";
 
 function Dashboard() {
 
@@ -111,8 +112,8 @@ function Dashboard() {
             key={category}
             onClick={() => setSelectedCategory(category)}
             className={`px-5 py-2 rounded-xl font-medium transition-all ${selectedCategory === category
-                ? "bg-blue-500 text-white"
-                : "bg-[#111827] text-gray-300"
+              ? "bg-blue-500 text-white"
+              : "bg-[#111827] text-gray-300"
               }`}
           >
             {category}
@@ -159,6 +160,8 @@ function Dashboard() {
           ))}
         </div>
       </div>
+
+      <ExpenseChart expenses={expenses} />
     </div>
   )
 }
