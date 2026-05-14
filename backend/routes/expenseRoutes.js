@@ -7,27 +7,44 @@ const router = express.Router();
 
 // CREATE EXPENSE
 router.post("/", authMiddleware, async (req, res) => {
-  try {
+    try {
 
-    const { title, amount, category, date } = req.body;
+        const { title, amount, category, date } = req.body;
 
-    const expense = new Expense({
-      user: req.user.id,
-      title,
-      amount,
-      category,
-      date,
-    });
+        const expense = new Expense({
+            user: req.user.id,
+            title,
+            amount,
+            category,
+            date,
+        });
 
-    const savedExpense = await expense.save();
+        const savedExpense = await expense.save();
 
-    res.status(201).json(savedExpense);
+        res.status(201).json(savedExpense);
 
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+});
+
+// GET ALL EXPENSES OF LOGGED-IN USER
+router.get("/", authMiddleware, async (req, res) => {
+    try {
+
+        const expenses = await Expense.find({
+            user: req.user.id,
+        }).sort({ createdAt: -1 });
+
+        res.status(200).json(expenses);
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
 });
 
 module.exports = router;
