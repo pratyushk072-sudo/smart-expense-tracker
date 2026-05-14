@@ -1,85 +1,30 @@
 const express = require("express");
-const Expense = require("../models/Expense");
 const authMiddleware = require("../middleware/authMiddleware");
+
+const {
+    createExpense,
+    getExpenses,
+    deleteExpense,
+    updateExpense,
+} = require("../controllers/expenseController");
 
 const router = express.Router();
 
 
 // CREATE EXPENSE
-router.post("/", authMiddleware, async (req, res) => {
-    try {
+router.post("/", authMiddleware, createExpense);
 
-        const { title, amount, category, date } = req.body;
 
-        const expense = new Expense({
-            user: req.user.id,
-            title,
-            amount,
-            category,
-            date,
-        });
+// GET ALL EXPENSES
+router.get("/", authMiddleware, getExpenses);
 
-        const savedExpense = await expense.save();
-
-        res.status(201).json(savedExpense);
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-});
-
-// GET ALL EXPENSES OF LOGGED-IN USER
-router.get("/", authMiddleware, async (req, res) => {
-    try {
-
-        const expenses = await Expense.find({
-            user: req.user.id,
-        }).sort({ createdAt: -1 });
-
-        res.status(200).json(expenses);
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-});
 
 // DELETE EXPENSE
-router.delete("/:id", authMiddleware, async (req, res) => {
-    try {
+router.delete("/:id", authMiddleware, deleteExpense);
 
-        // find expense
-        const expense = await Expense.findById(req.params.id);
 
-        // check expense exists
-        if (!expense) {
-            return res.status(404).json({
-                message: "Expense not found",
-            });
-        }
+// UPDATE EXPENSE
+router.put("/:id", authMiddleware, updateExpense);
 
-        // check ownership
-        if (expense.user.toString() !== req.user.id) {
-            return res.status(401).json({
-                message: "Not authorized",
-            });
-        }
-
-        // delete expense
-        await expense.deleteOne();
-
-        res.status(200).json({
-            message: "Expense deleted successfully",
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-});
 
 module.exports = router;
