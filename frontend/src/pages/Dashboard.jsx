@@ -1,169 +1,62 @@
-import { useState, useEffect } from "react";
 import ExpenseForm from "../components/ExpenseForm";
-import StatCard from "../components/StatCard";
-import ExpenseChart from "../components/ExpenseChart";
+import { useEffect, useState } from "react";
+import API from "../services/api";
 
-function Dashboard() {
+const Dashboard = () => {
 
-  const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const [expenses, setExpenses] = useState(() => {
-    const savedExpenses = localStorage.getItem("expenses");
-
-    return savedExpenses
-      ? JSON.parse(savedExpenses)
-      : [
-        {
-          id: 1,
-          title: "Swiggy Order",
-          amount: 450,
-          category: "Food",
-        },
-        {
-          id: 2,
-          title: "Uber Ride",
-          amount: 220,
-          category: "Transport",
-        },
-      ];
-  });
+  const [expenses, setExpenses] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem("expenses", JSON.stringify(expenses));
-  }, [expenses]);
 
-  const addExpense = (expense) => {
-    setExpenses([expense, ...expenses]);
-  };
+    const fetchExpenses = async () => {
+      try {
 
-  const totalExpenses = expenses.reduce(
-    (total, expense) => total + expense.amount,
-    0
-  );
+        const token = localStorage.getItem("token");
 
-  const totalBalance = 45000;
+        const res = await API.get("/expenses", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-  const savings = totalBalance - totalExpenses;
+        setExpenses(res.data);
 
-  const budgetLeft = 20000 - totalExpenses;
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  const categories = [
-    "All",
-    "Food",
-    "Transport",
-    "Entertainment",
-    "Shopping",
-    "Bills",
-  ];
+    fetchExpenses();
 
-  const filteredExpenses =
-    selectedCategory === "All"
-      ? expenses
-      : expenses.filter(
-        (expense) => expense.category === selectedCategory
-      );
-
-  const deleteExpense = (id) => {
-    const updatedExpenses = expenses.filter(
-      (expense) => expense.id !== id
-    );
-
-    setExpenses(updatedExpenses);
-  };
+  }, []);
 
   return (
     <div>
-      <div className="mb-10">
-        <ExpenseForm addExpense={addExpense} />
-        <h1 className="text-4xl font-bold text-white mb-3">
-          Welcome Back 👋
-        </h1>
+      <h1>Dashboard</h1>
 
-        <p className="text-zinc-400">
-          Track your expenses and manage your finances efficiently.
-        </p>
-      </div>
+      <ExpenseForm />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
-        <StatCard
-          title="Total Balance"
-          amount={`₹${totalBalance}`}
-        />
-
-        <StatCard
-          title="Monthly Expenses"
-          amount={`₹${totalExpenses}`}
-        />
-
-        <StatCard
-          title="Savings"
-          amount={`₹${savings}`}
-        />
-
-        <StatCard
-          title="Budget Left"
-          amount={`₹${budgetLeft}`}
-        />
-      </div>
-
-      <div className="flex gap-3 flex-wrap mb-8">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`px-5 py-2 rounded-xl font-medium transition-all ${selectedCategory === category
-              ? "bg-blue-500 text-white"
-              : "bg-[#111827] text-gray-300"
-              }`}
+      {
+        expenses.map((expense) => (
+          <div
+            key={expense._id}
+            style={{
+              border: "1px solid gray",
+              padding: "10px",
+              marginBottom: "10px",
+              color: "white",
+            }}
           >
-            {category}
-          </button>
-        ))}
-      </div>
+            <h3>{expense.title}</h3>
 
-      <div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white">
-            Recent Transactions
-          </h2>
-        </div>
+            <p>Amount: ₹{expense.amount}</p>
 
-        <div className="space-y-4">
-          {filteredExpenses.map((expense) => (
-            <div
-              key={expense.id}
-              className="bg-[#111827] border border-gray-800 rounded-2xl p-5 flex justify-between items-center"
-            >
-              <div>
-                <h3 className="text-white text-xl font-semibold">
-                  {expense.title}
-                </h3>
-
-                <p className="text-gray-400">
-                  {expense.category}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <h2 className="text-red-400 text-2xl font-bold">
-                  ₹{expense.amount}
-                </h2>
-
-                <button
-                  onClick={() => deleteExpense(expense.id)}
-                  className="bg-red-500 hover:bg-red-600 px-3 py-2 rounded-lg text-white"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <ExpenseChart expenses={expenses} />
+            <p>Category: {expense.category}</p>
+          </div>
+        ))
+      }
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

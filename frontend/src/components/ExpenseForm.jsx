@@ -1,77 +1,115 @@
 import { useState } from "react";
+import API from "../services/api";
 
-const ExpenseForm = ({ addExpense }) => {
+const ExpenseForm = () => {
+
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title || !amount || !category) {
-      alert("Please fill all fields");
-      return;
+    try {
+
+      const token = localStorage.getItem("token");
+
+      const expenseData = {
+        title,
+        amount,
+        category,
+      };
+
+      const res = await API.post(
+        "/expenses",
+        expenseData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(res.data);
+
+      alert("Expense Added Successfully");
+
+      setTitle("");
+      setAmount("");
+      setCategory("");
+
+    } catch (error) {
+      console.log(error);
     }
-
-    const newExpense = {
-      id: Date.now(),
-      title,
-      amount: Number(amount),
-      category,
-    };
-
-    addExpense(newExpense);
-
-    setTitle("");
-    setAmount("");
-    setCategory("");
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-[#111827] p-6 rounded-2xl border border-gray-800 space-y-4"
-    >
-      <h2 className="text-2xl font-bold text-white">
-        Add Expense
-      </h2>
+    <div style={{ marginBottom: "20px" }}>
+      <form onSubmit={handleSubmit}>
 
-      <input
-        type="text"
-        placeholder="Expense title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="w-full p-3 rounded-lg bg-black border border-gray-700 text-white"
-      />
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          style={{
+            padding: "10px",
+            width: "250px",
+            backgroundColor: "#222",
+            color: "white",
+            border: "1px solid gray",
+          }}
+        />
 
-      <input
-        type="number"
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        className="w-full p-3 rounded-lg bg-black border border-gray-700 text-white"
-      />
+        <br /><br />
 
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="w-full p-3 rounded-lg bg-black border border-gray-700 text-white"
-      >
-        <option value="">Select Category</option>
-        <option value="Food">Food</option>
-        <option value="Transport">Transport</option>
-        <option value="Shopping">Shopping</option>
-        <option value="Entertainment">Entertainment</option>
-        <option value="Bills">Bills</option>
-      </select>
+        <input
+          type="number"
+          placeholder="Amount"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          style={{
+            padding: "10px",
+            width: "250px",
+            backgroundColor: "#222",
+            color: "white",
+            border: "1px solid gray",
+          }}
+        />
 
-      <button
-        type="submit"
-        className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-semibold"
-      >
-        Add Expense
-      </button>
-    </form>
+        <br /><br />
+
+        <input
+          type="text"
+          placeholder="Category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          style={{
+            padding: "10px",
+            width: "250px",
+            backgroundColor: "#222",
+            color: "white",
+            border: "1px solid gray",
+          }}
+        />
+
+        <br /><br />
+
+        <button
+          style={{
+            padding: "10px 20px",
+            cursor: "pointer",
+            backgroundColor: "#2563eb",
+            color: "white",
+            border: "none",
+          }}
+          type="submit"
+        >
+          Add Expense
+        </button>
+
+      </form>
+    </div>
   );
 };
 
