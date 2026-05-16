@@ -1,111 +1,189 @@
-import ExpenseForm from "../components/ExpenseForm";
 import { useEffect, useState } from "react";
-import API from "../services/api";
+import API from "../api/axios";
+import {
+  FaMoneyBillWave,
+  FaChartPie,
+  FaPlus,
+  FaSignOutAlt,
+} from "react-icons/fa";
 
 const Dashboard = () => {
-
   const [expenses, setExpenses] = useState([]);
-  const [editExpense, setEditExpense] = useState(null);
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
 
-  const handleDelete = async (id) => {
-
+  const fetchExpenses = async () => {
     try {
+      const res = await API.get("/expenses");
 
-      const token = localStorage.getItem("token");
-
-      await API.delete(`/expenses/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setExpenses((prev) =>
-        prev.filter((expense) => expense._id !== id)
-      );
-
+      setExpenses(res.data);
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-
-    const fetchExpenses = async () => {
-      try {
-
-        const token = localStorage.getItem("token");
-
-        const res = await API.get("/expenses", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setExpenses(res.data);
-
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchExpenses();
-
-  }, []);
-
   return (
-    <div>
-      <h1>Dashboard</h1>
+    <div className="min-h-screen bg-gray-100 flex">
 
-      <ExpenseForm setExpenses={setExpenses} editExpense={editExpense}/>
+      {/* Sidebar */}
+      <div className="w-64 bg-white shadow-lg p-5">
 
-      {
-        expenses.map((expense) => (
-          <div
-            key={expense._id}
-            style={{
-              border: "1px solid gray",
-              padding: "10px",
-              marginBottom: "10px",
-              color: "white",
-            }}
-          >
-            <h3>{expense.title}</h3>
+        <h1 className="text-3xl font-bold text-blue-600">
+          Expense Tracker
+        </h1>
 
-            <p>Amount: ₹{expense.amount}</p>
+        <div className="mt-10 space-y-3">
 
-            <p>Category: {expense.category}</p>
+          <button className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 transition">
+            <FaChartPie />
+            Dashboard
+          </button>
 
-            <button
-              onClick={() => setEditExpense(expense)}
-              style={{
-                marginTop: "10px",
-                marginRight: "10px",
-                padding: "8px 16px",
-                backgroundColor: "orange",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Edit
-            </button>
+          <button className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 transition">
+            <FaMoneyBillWave />
+            Expenses
+          </button>
 
-            <button
-              onClick={() => handleDelete(expense._id)}
-              style={{
-                marginTop: "10px",
-                padding: "8px 16px",
-                backgroundColor: "red",
-                color: "white",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              Delete
-            </button>
+          <button className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 transition">
+            <FaPlus />
+            Add Expense
+          </button>
+
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 p-6">
+
+        {/* Navbar */}
+        <div className="bg-white p-5 rounded-2xl shadow-md flex justify-between items-center">
+
+          <h2 className="text-3xl font-bold">
+            Dashboard
+          </h2>
+
+          <button className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">
+            <FaSignOutAlt />
+            Logout
+          </button>
+
+        </div>
+
+        {/* Cards */}
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
+            <h3 className="text-gray-500 text-lg">
+              Total Expenses
+            </h3>
+
+            <p className="text-4xl font-bold mt-3">
+              ₹5000
+            </p>
           </div>
-        ))
-      }
+
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
+            <h3 className="text-gray-500 text-lg">
+              This Month
+            </h3>
+
+            <p className="text-4xl font-bold mt-3">
+              ₹2000
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
+            <h3 className="text-gray-500 text-lg">
+              Remaining Budget
+            </h3>
+
+            <p className="text-4xl font-bold mt-3">
+              ₹8000
+            </p>
+          </div>
+
+        </div>
+
+        {/* Recent Expenses */}
+
+        <div className="bg-white mt-8 p-6 rounded-2xl shadow-md">
+
+          <h2 className="text-2xl font-bold mb-5">
+            Recent Expenses
+          </h2>
+
+          <div className="overflow-x-auto">
+
+            <table className="w-full border-collapse">
+
+              <thead>
+                <tr className="bg-gray-100">
+
+                  <th className="p-3 text-left">
+                    Title
+                  </th>
+
+                  <th className="p-3 text-left">
+                    Amount
+                  </th>
+
+                  <th className="p-3 text-left">
+                    Category
+                  </th>
+
+                  <th className="p-3 text-left">
+                    Date
+                  </th>
+
+                  <th className="p-3 text-left">
+                    Action
+                  </th>
+
+                </tr>
+              </thead>
+
+              <tbody>
+
+                {expenses.map((expense) => (
+                  <tr key={expense._id} className="border-b">
+
+                    <td className="p-3">
+                      {expense.title}
+                    </td>
+
+                    <td className="p-3">
+                      ₹{expense.amount}
+                    </td>
+
+                    <td className="p-3">
+                      {expense.category}
+                    </td>
+
+                    <td className="p-3">
+                      {new Date(expense.date).toLocaleDateString()}
+                    </td>
+
+                    <td className="p-3">
+
+                      <button className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">
+                        Delete
+                      </button>
+
+                    </td>
+
+                  </tr>
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
     </div>
   );
 };

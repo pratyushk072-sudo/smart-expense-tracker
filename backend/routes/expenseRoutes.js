@@ -16,7 +16,7 @@ router.post("/", authMiddleware, createExpense);
 
 
 // GET ALL EXPENSES
-router.get("/", authMiddleware, getExpenses);
+router.get("/", getExpenses);
 
 
 // DELETE EXPENSE
