@@ -6,6 +6,27 @@ const Dashboard = () => {
 
   const [expenses, setExpenses] = useState([]);
 
+  const handleDelete = async (id) => {
+
+    try {
+
+      const token = localStorage.getItem("token");
+
+      await API.delete(`/expenses/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setExpenses((prev) =>
+        prev.filter((expense) => expense._id !== id)
+      );
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
 
     const fetchExpenses = async () => {
@@ -34,7 +55,7 @@ const Dashboard = () => {
     <div>
       <h1>Dashboard</h1>
 
-      <ExpenseForm />
+      <ExpenseForm setExpenses={setExpenses} />
 
       {
         expenses.map((expense) => (
@@ -52,6 +73,20 @@ const Dashboard = () => {
             <p>Amount: ₹{expense.amount}</p>
 
             <p>Category: {expense.category}</p>
+
+            <button
+              onClick={() => handleDelete(expense._id)}
+              style={{
+                marginTop: "10px",
+                padding: "8px 16px",
+                backgroundColor: "red",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Delete
+            </button>
           </div>
         ))
       }

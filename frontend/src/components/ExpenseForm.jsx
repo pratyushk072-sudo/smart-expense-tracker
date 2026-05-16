@@ -1,7 +1,7 @@
 import { useState } from "react";
 import API from "../services/api";
 
-const ExpenseForm = () => {
+const ExpenseForm = ({ setExpenses }) => {
 
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -30,9 +30,7 @@ const ExpenseForm = () => {
         }
       );
 
-      console.log(res.data);
-
-      alert("Expense Added Successfully");
+      setExpenses((prev) => [res.data, ...prev]);
 
       setTitle("");
       setAmount("");
@@ -79,19 +77,33 @@ const ExpenseForm = () => {
 
         <br /><br />
 
-        <input
-          type="text"
-          placeholder="Category"
+        <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           style={{
             padding: "10px",
-            width: "250px",
+            width: "274px",
             backgroundColor: "#222",
             color: "white",
             border: "1px solid gray",
           }}
-        />
+        >
+
+          <option value="">Select Category</option>
+
+          <option value="Food">Food</option>
+
+          <option value="Travel">Travel</option>
+
+          <option value="Shopping">Shopping</option>
+
+          <option value="Entertainment">Entertainment</option>
+
+          <option value="Bills">Bills</option>
+
+          <option value="Health">Health</option>
+
+        </select>
 
         <br /><br />
 
