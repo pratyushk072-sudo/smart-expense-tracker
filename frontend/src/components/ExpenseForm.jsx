@@ -1,11 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../services/api";
 
-const ExpenseForm = ({ setExpenses }) => {
+const ExpenseForm = ({ setExpenses, editExpense }) => {
 
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
+
+  useEffect(() => {
+
+    if (editExpense) {
+      setTitle(editExpense.title);
+      setAmount(editExpense.amount);
+      setCategory(editExpense.category);
+    }
+
+  }, [editExpense]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,17 +30,41 @@ const ExpenseForm = ({ setExpenses }) => {
         category,
       };
 
-      const res = await API.post(
-        "/expenses",
-        expenseData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if (editExpense) {
 
-      setExpenses((prev) => [res.data, ...prev]);
+        const res = await API.put(
+          `/expenses/${editExpense._id}`,
+          expenseData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setExpenses((prev) =>
+          prev.map((expense) =>
+            expense._id === editExpense._id
+              ? res.data
+              : expense
+          )
+        );
+
+      } else {
+
+        const res = await API.post(
+          "/expenses",
+          expenseData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setExpenses((prev) => [res.data, ...prev]);
+
+      }
 
       setTitle("");
       setAmount("");
@@ -119,7 +153,6 @@ const ExpenseForm = ({ setExpenses }) => {
         >
           Add Expense
         </button>
-
       </form>
     </div>
   );

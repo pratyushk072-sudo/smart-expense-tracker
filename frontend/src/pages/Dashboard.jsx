@@ -5,6 +5,7 @@ import API from "../services/api";
 const Dashboard = () => {
 
   const [expenses, setExpenses] = useState([]);
+  const [editExpense, setEditExpense] = useState(null);
 
   const handleDelete = async (id) => {
 
@@ -55,7 +56,7 @@ const Dashboard = () => {
     <div>
       <h1>Dashboard</h1>
 
-      <ExpenseForm setExpenses={setExpenses} />
+      <ExpenseForm setExpenses={setExpenses} editExpense={editExpense}/>
 
       {
         expenses.map((expense) => (
@@ -73,6 +74,21 @@ const Dashboard = () => {
             <p>Amount: ₹{expense.amount}</p>
 
             <p>Category: {expense.category}</p>
+
+            <button
+              onClick={() => setEditExpense(expense)}
+              style={{
+                marginTop: "10px",
+                marginRight: "10px",
+                padding: "8px 16px",
+                backgroundColor: "orange",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Edit
+            </button>
 
             <button
               onClick={() => handleDelete(expense._id)}
