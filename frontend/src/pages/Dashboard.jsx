@@ -7,10 +7,21 @@ import {
   FaPlus,
   FaSignOutAlt,
 } from "react-icons/fa";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const Dashboard = () => {
   const [expenses, setExpenses] = useState([]);
   const [editExpense, setEditExpense] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [filterCategory, setFilterCategory] = useState("");
   const budget = 5000;
   useEffect(() => {
     fetchExpenses();
@@ -56,6 +67,75 @@ const Dashboard = () => {
     .reduce((acc, expense) => acc + expense.amount, 0);
 
   const remainingBudget = budget - totalExpenses;
+
+  const categoryData = [
+
+    {
+      name: "Food",
+      value: expenses
+        .filter((e) => e.category === "Food")
+        .reduce((acc, e) => acc + e.amount, 0),
+    },
+
+    {
+      name: "Transport",
+      value: expenses
+        .filter((e) => e.category === "Transport")
+        .reduce((acc, e) => acc + e.amount, 0),
+    },
+
+    {
+      name: "Shopping",
+      value: expenses
+        .filter((e) => e.category === "Shopping")
+        .reduce((acc, e) => acc + e.amount, 0),
+    },
+
+    {
+      name: "Entertainment",
+      value: expenses
+        .filter((e) => e.category === "Entertainment")
+        .reduce((acc, e) => acc + e.amount, 0),
+    },
+
+    {
+      name: "Bills",
+      value: expenses
+        .filter((e) => e.category === "Bills")
+        .reduce((acc, e) => acc + e.amount, 0),
+    },
+
+    {
+      name: "Other",
+      value: expenses
+        .filter((e) => e.category === "Other")
+        .reduce((acc, e) => acc + e.amount, 0),
+    },
+
+  ];
+
+  const COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#FFBB28",
+    "#FF8042",
+    "#AF19FF",
+    "#FF4560",
+  ];
+
+  const filteredExpenses = expenses.filter((expense) => {
+
+    const matchesSearch =
+      expense.title
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+    const matchesCategory =
+      filterCategory === "" ||
+      expense.category === filterCategory;
+
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
@@ -152,6 +232,49 @@ const Dashboard = () => {
 
         </div>
 
+        <div className="bg-white mt-8 p-6 rounded-2xl shadow-md">
+
+          <h2 className="text-2xl font-bold mb-5">
+            Expense Analytics
+          </h2>
+
+          <div className="w-full h-[400px]">
+
+            <ResponsiveContainer>
+
+              <PieChart>
+
+                <Pie
+                  data={categoryData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={120}
+                  label
+                >
+
+                  {categoryData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+
+                </Pie>
+
+                <Tooltip />
+
+                <Legend />
+
+              </PieChart>
+
+            </ResponsiveContainer>
+
+          </div>
+
+        </div>
+
         {/* Recent Expenses */}
 
         <ExpenseForm
@@ -164,6 +287,54 @@ const Dashboard = () => {
           <h2 className="text-2xl font-bold mb-5">
             Recent Expenses
           </h2>
+
+          <div className="flex flex-col md:flex-row gap-4 mb-5">
+
+            <input
+              type="text"
+              placeholder="Search Expense..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="p-3 border rounded-lg outline-none flex-1"
+            />
+
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="p-3 border rounded-lg outline-none"
+            >
+
+              <option value="">
+                All Categories
+              </option>
+
+              <option value="Food">
+                Food
+              </option>
+
+              <option value="Transport">
+                Transport
+              </option>
+
+              <option value="Shopping">
+                Shopping
+              </option>
+
+              <option value="Entertainment">
+                Entertainment
+              </option>
+
+              <option value="Bills">
+                Bills
+              </option>
+
+              <option value="Other">
+                Other
+              </option>
+
+            </select>
+
+          </div>
 
           <div className="overflow-x-auto">
 
@@ -197,7 +368,7 @@ const Dashboard = () => {
 
               <tbody>
 
-                {expenses.map((expense) => (
+                {filteredExpenses.map((expense) => (
                   <tr key={expense._id} className="border-b">
 
                     <td className="p-3">
