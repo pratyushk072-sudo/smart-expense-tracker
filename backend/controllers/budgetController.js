@@ -1,71 +1,75 @@
 const Budget = require("../models/Budget");
 
-
-// SET MONTHLY BUDGET
-const setBudget = async (req, res) => {
-
+// GET BUDGET
+const getBudget = async (req, res) => {
   try {
 
-    const { month, year, amount } = req.body;
+    const currentDate = new Date();
+
+    const budget = await Budget.findOne({
+      user: req.user.id,
+      month: currentDate.getMonth() + 1,
+      year: currentDate.getFullYear(),
+    });
+
+    res.json({
+      monthlyBudget: budget ? budget.amount : 0,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
+// UPDATE BUDGET
+const updateBudget = async (req, res) => {
+  try {
+
+    const currentDate = new Date();
 
     let budget = await Budget.findOne({
       user: req.user.id,
-      month,
-      year,
+      month: currentDate.getMonth() + 1,
+      year: currentDate.getFullYear(),
     });
 
     if (budget) {
 
-      budget.amount = amount;
+      budget.amount = Number(req.body.monthlyBudget);
 
       await budget.save();
 
-      return res.json(budget);
+    } else {
+
+      budget = await Budget.create({
+        user: req.user.id,
+        month: currentDate.getMonth() + 1,
+        year: currentDate.getFullYear(),
+        amount: Number(req.body.monthlyBudget),
+      });
+
     }
 
-    budget = await Budget.create({
-      user: req.user.id,
-      month,
-      year,
-      amount,
+    res.json({
+      monthlyBudget: budget.amount,
     });
 
-    res.status(201).json(budget);
-
   } catch (error) {
+
+    console.log(error);
 
     res.status(500).json({
       message: error.message,
     });
+
   }
 };
-
-
-// GET CURRENT BUDGET
-const getBudget = async (req, res) => {
-
-  try {
-
-    const { month, year } = req.query;
-
-    const budget = await Budget.findOne({
-      user: req.user.id,
-      month,
-      year,
-    });
-
-    res.json(budget);
-
-  } catch (error) {
-
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
 
 module.exports = {
-  setBudget,
   getBudget,
+  updateBudget,
 };

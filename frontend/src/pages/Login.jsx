@@ -30,6 +30,11 @@ const Login = () => {
                 res.data.token
             );
 
+            localStorage.setItem(
+                "name", 
+                res.data.user.name
+            );
+
             window.location.href = "/";
 
         } catch (error) {

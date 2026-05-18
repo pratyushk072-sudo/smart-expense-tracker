@@ -18,25 +18,21 @@ import {
 
 const Dashboard = () => {
   const [expenses, setExpenses] = useState([]);
-  const [budget, setBudget] = useState(0);
+  const [budget, setBudget] = useState(Number(0));
   const [budgetInput, setBudgetInput] = useState("");
   const [editExpense, setEditExpense] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
-  const [isEditingBudget, setIsEditingBudget] = useState(
-    localStorage.getItem("budget") ? false : true
+  const userName = localStorage.getItem("name");
+
+  const [selectedMonth, setSelectedMonth] = useState(
+    new Date().toISOString().slice(0, 7)
   );
+  const [isEditingBudget, setIsEditingBudget] = useState(false);
+
   useEffect(() => {
     fetchBudget();
     fetchExpenses();
-  }, []);
-
-  useEffect(() => {
-    const savedBudget = localStorage.getItem("budget");
-  
-    if (savedBudget) {
-      setBudget(Number(savedBudget));
-    }
   }, []);
 
   const deleteExpense = async (id) => {
@@ -63,11 +59,15 @@ const Dashboard = () => {
 
   const fetchBudget = async () => {
     try {
-
-      const res = await API.get("/expenses/budget");
-
-      setBudget(res.data.monthlyBudget);
-
+  
+      const res = await API.get("/budget");
+  
+      console.log(res.data);
+  
+      setBudget(
+        Number(res.data.monthlyBudget || 0)
+      );
+  
     } catch (error) {
       console.log(error);
     }
@@ -75,78 +75,101 @@ const Dashboard = () => {
 
   const updateBudget = async () => {
     try {
-
-      await API.put("/expenses/budget", {
-        monthlyBudget: Number(budgetInput),
-      });
-
-      setBudget(Number(budgetInput));
+  
+      const res = await API.put(
+        "/budget",
+        {
+          monthlyBudget: Number(budgetInput),
+        }
+      );
+  
+      setBudget(
+        Number(res.data.monthlyBudget)
+      );
+  
       setBudgetInput("");
-
+  
     } catch (error) {
       console.log(error);
     }
   };
 
-  const totalExpenses = expenses.reduce(
+  const filteredExpenses = expenses.filter((expense) => {
+    const expenseDate = new Date(expense.date);
+
+    const expenseMonth =
+      expenseDate.getFullYear() +
+      "-" +
+      String(expenseDate.getMonth() + 1).padStart(2, "0");
+
+    const matchesMonth =
+      expenseMonth === selectedMonth;
+
+    const matchesSearch =
+      expense.title
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+    const matchesCategory =
+      filterCategory === "" ||
+      expense.category === filterCategory;
+
+    return (
+      matchesMonth &&
+      matchesSearch &&
+      matchesCategory
+    );
+  });
+
+  const totalExpenses = filteredExpenses.reduce(
     (acc, expense) => acc + expense.amount,
     0
   );
 
-  const thisMonthExpenses = expenses
-    .filter((expense) => {
-      const expenseDate = new Date(expense.date);
-      const currentDate = new Date();
+  const thisMonthExpenses = totalExpenses;
 
-      return (
-        expenseDate.getMonth() === currentDate.getMonth() &&
-        expenseDate.getFullYear() === currentDate.getFullYear()
-      );
-    })
-    .reduce((acc, expense) => acc + expense.amount, 0);
-
-  const remainingBudget = budget - totalExpenses;
+  const remainingBudget = Number(budget) - totalExpenses;
 
   const categoryData = [
 
     {
       name: "Food",
-      value: expenses
+      value: filteredExpenses
         .filter((e) => e.category === "Food")
         .reduce((acc, e) => acc + e.amount, 0),
     },
 
     {
       name: "Transport",
-      value: expenses
+      value: filteredExpenses
         .filter((e) => e.category === "Transport")
         .reduce((acc, e) => acc + e.amount, 0),
     },
 
     {
       name: "Shopping",
-      value: expenses
+      value: filteredExpenses
         .filter((e) => e.category === "Shopping")
         .reduce((acc, e) => acc + e.amount, 0),
     },
 
     {
       name: "Entertainment",
-      value: expenses
+      value: filteredExpenses
         .filter((e) => e.category === "Entertainment")
         .reduce((acc, e) => acc + e.amount, 0),
     },
 
     {
       name: "Bills",
-      value: expenses
+      value: filteredExpenses
         .filter((e) => e.category === "Bills")
         .reduce((acc, e) => acc + e.amount, 0),
     },
 
     {
       name: "Other",
-      value: expenses
+      value: filteredExpenses
         .filter((e) => e.category === "Other")
         .reduce((acc, e) => acc + e.amount, 0),
     },
@@ -161,20 +184,6 @@ const Dashboard = () => {
     "#AF19FF",
     "#FF4560",
   ];
-
-  const filteredExpenses = expenses.filter((expense) => {
-
-    const matchesSearch =
-      expense.title
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-
-    const matchesCategory =
-      filterCategory === "" ||
-      expense.category === filterCategory;
-
-    return matchesSearch && matchesCategory;
-  });
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
@@ -212,9 +221,15 @@ const Dashboard = () => {
         {/* Navbar */}
         <div className="bg-white p-5 rounded-2xl shadow-md flex justify-between items-center">
 
-          <h2 className="text-3xl font-bold">
-            Dashboard
-          </h2>
+          <div>
+            <h2 className="text-3xl font-bold">
+              Dashboard
+            </h2>
+
+            <p className="text-gray-500 mt-1">
+              Welcome back, {userName} 👋
+            </p>
+          </div>
 
           <button
             onClick={() => {
@@ -240,7 +255,7 @@ const Dashboard = () => {
             </h3>
 
             <p className="text-4xl font-bold mt-3">
-              ₹{budget}
+              ₹{Number(budget)}
             </p>
 
             {isEditingBudget ? (
@@ -256,14 +271,9 @@ const Dashboard = () => {
                 />
 
                 <button
-                  onClick={() => {
-                    setBudget(Number(budgetInput));
-                  
-                    localStorage.setItem(
-                      "budget",
-                      Number(budgetInput)
-                    );
-                  
+                  onClick={async () => {
+                    await updateBudget();
+
                     setIsEditingBudget(false);
                   }}
                   className="bg-blue-600 text-white px-4 rounded-lg"
@@ -423,6 +433,13 @@ const Dashboard = () => {
           </div>
 
           <div className="overflow-x-auto">
+
+            <input
+              type="month"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="border p-2 rounded mb-4"
+            />
 
             <table className="w-full border-collapse">
 

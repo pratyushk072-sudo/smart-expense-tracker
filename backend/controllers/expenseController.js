@@ -1,3 +1,4 @@
+const Budget = require("../models/Budget");
 const Expense = require("../models/Expense");
 
 
@@ -108,28 +109,76 @@ const updateExpense = async (req, res) => {
   }
 };
 
-let monthlyBudget = 0;
-
-
 // GET BUDGET
 const getBudget = async (req, res) => {
+  try {
 
-  res.json({
-    monthlyBudget,
-  });
+    const currentDate = new Date();
 
+    const budget = await Budget.findOne({
+      user: req.user.id,
+      month: currentDate.getMonth() + 1,
+      year: currentDate.getFullYear(),
+    });
+
+    res.json({
+      monthlyBudget: budget
+        ? budget.monthlyBudget
+        : 0,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
 };
 
 
 // UPDATE BUDGET
 const updateBudget = async (req, res) => {
+  try {
 
-  monthlyBudget = req.body.monthlyBudget;
+    const currentDate = new Date();
 
-  res.json({
-    monthlyBudget,
-  });
+    let budget = await Budget.findOne({
+      user: req.user.id,
+      month: currentDate.getMonth() + 1,
+      year: currentDate.getFullYear(),
+    });
 
+    if (budget) {
+
+      budget.amount = req.body.monthlyBudget;
+
+      await budget.save();
+
+    } else {
+
+      budget = await Budget.create({
+        user: req.user.id,
+        month: currentDate.getMonth() + 1,
+        year: currentDate.getFullYear(),
+        monthlyBudget: req.body.monthlyBudget,
+      });
+
+    }
+
+    res.json({
+      monthlyBudget: budget.monthlyBudget,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+  
+    res.status(500).json({
+      message: error.message,
+    });
+  
+  }
 };
 
 
