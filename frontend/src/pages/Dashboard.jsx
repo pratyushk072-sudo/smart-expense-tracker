@@ -18,13 +18,25 @@ import {
 
 const Dashboard = () => {
   const [expenses, setExpenses] = useState([]);
+  const [budget, setBudget] = useState(0);
+  const [budgetInput, setBudgetInput] = useState("");
   const [editExpense, setEditExpense] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
   const [filterCategory, setFilterCategory] = useState("");
-  const budget = 5000;
+  const [isEditingBudget, setIsEditingBudget] = useState(
+    localStorage.getItem("budget") ? false : true
+  );
   useEffect(() => {
+    fetchBudget();
     fetchExpenses();
+  }, []);
+
+  useEffect(() => {
+    const savedBudget = localStorage.getItem("budget");
+  
+    if (savedBudget) {
+      setBudget(Number(savedBudget));
+    }
   }, []);
 
   const deleteExpense = async (id) => {
@@ -44,6 +56,33 @@ const Dashboard = () => {
       const res = await API.get("/expenses");
 
       setExpenses(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchBudget = async () => {
+    try {
+
+      const res = await API.get("/expenses/budget");
+
+      setBudget(res.data.monthlyBudget);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateBudget = async () => {
+    try {
+
+      await API.put("/expenses/budget", {
+        monthlyBudget: Number(budgetInput),
+      });
+
+      setBudget(Number(budgetInput));
+      setBudgetInput("");
+
     } catch (error) {
       console.log(error);
     }
@@ -177,7 +216,13 @@ const Dashboard = () => {
             Dashboard
           </h2>
 
-          <button className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">
+          <button
+            onClick={() => {
+              localStorage.removeItem("token");
+              window.location.href = "/login";
+            }}
+            className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
             <FaSignOutAlt />
             Logout
           </button>
@@ -197,6 +242,47 @@ const Dashboard = () => {
             <p className="text-4xl font-bold mt-3">
               ₹{budget}
             </p>
+
+            {isEditingBudget ? (
+
+              <div className="flex gap-2 mt-4">
+
+                <input
+                  type="number"
+                  placeholder="Set Budget"
+                  value={budgetInput}
+                  onChange={(e) => setBudgetInput(e.target.value)}
+                  className="border p-2 rounded-lg w-full"
+                />
+
+                <button
+                  onClick={() => {
+                    setBudget(Number(budgetInput));
+                  
+                    localStorage.setItem(
+                      "budget",
+                      Number(budgetInput)
+                    );
+                  
+                    setIsEditingBudget(false);
+                  }}
+                  className="bg-blue-600 text-white px-4 rounded-lg"
+                >
+                  Save
+                </button>
+
+              </div>
+
+            ) : (
+
+              <button
+                onClick={() => setIsEditingBudget(true)}
+                className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg"
+              >
+                Edit Budget
+              </button>
+
+            )}
 
           </div>
 

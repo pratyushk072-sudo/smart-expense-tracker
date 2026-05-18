@@ -6,21 +6,25 @@ const {
     getExpenses,
     deleteExpense,
     updateExpense,
-} = require("../controllers/expenseController");
+    getBudget,
+    updateBudget,
+  } = require("../controllers/expenseController");
 
 const router = express.Router();
 
 
 // CREATE EXPENSE
-router.post("/", createExpense);
+router.post("/", authMiddleware, createExpense);
 
 
 // GET ALL EXPENSES
-router.get("/", getExpenses);
+router.get("/", authMiddleware, getExpenses);
+router.get("/budget", getBudget);
+router.put("/budget", updateBudget);
 
 
 // DELETE EXPENSE
-router.delete("/:id", deleteExpense);
+router.delete("/:id", authMiddleware, deleteExpense);
 
 
 // UPDATE EXPENSE

@@ -1,3 +1,4 @@
+const budgetRoutes = require("./routes/budgetRoutes");
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -18,6 +19,7 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/expenses", expenseRoutes);
+app.use("/api/budget", budgetRoutes);
 
 const PORT = process.env.PORT || 5000;
 
