@@ -1,14 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../api/axios";
 
-const ExpenseForm = ({ fetchExpenses }) => {
-
+const ExpenseForm = ({
+  fetchExpenses,
+  editExpense,
+  setEditExpense,
+}) => {
   const [formData, setFormData] = useState({
+
     title: "",
     amount: "",
     category: "",
     date: "",
   });
+
+  useEffect(() => {
+    if (editExpense) {
+      setFormData({
+        title: editExpense.title,
+        amount: editExpense.amount,
+        category: editExpense.category,
+        date: editExpense.date?.split("T")[0],
+      });
+    }
+  }, [editExpense]);
 
   const handleChange = (e) => {
     setFormData({
@@ -21,7 +36,21 @@ const ExpenseForm = ({ fetchExpenses }) => {
     e.preventDefault();
 
     try {
-      await API.post("/expenses", formData);
+
+      if (editExpense) {
+
+        await API.put(
+          `/expenses/${editExpense._id}`,
+          formData
+        );
+
+        setEditExpense(null);
+
+      } else {
+
+        await API.post("/expenses", formData);
+
+      }
 
       setFormData({
         title: "",
@@ -120,7 +149,7 @@ const ExpenseForm = ({ fetchExpenses }) => {
           type="submit"
           className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition md:col-span-2"
         >
-          Add Expense
+          {editExpense ? "Update Expense" : "Add Expense"}
         </button>
 
       </form>

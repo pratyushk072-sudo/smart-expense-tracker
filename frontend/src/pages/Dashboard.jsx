@@ -10,6 +10,8 @@ import {
 
 const Dashboard = () => {
   const [expenses, setExpenses] = useState([]);
+  const [editExpense, setEditExpense] = useState(null);
+  const budget = 5000;
   useEffect(() => {
     fetchExpenses();
   }, []);
@@ -35,6 +37,26 @@ const Dashboard = () => {
       console.log(error);
     }
   };
+
+  const totalExpenses = expenses.reduce(
+    (acc, expense) => acc + expense.amount,
+    0
+  );
+
+  const thisMonthExpenses = expenses
+    .filter((expense) => {
+      const expenseDate = new Date(expense.date);
+      const currentDate = new Date();
+
+      return (
+        expenseDate.getMonth() === currentDate.getMonth() &&
+        expenseDate.getFullYear() === currentDate.getFullYear()
+      );
+    })
+    .reduce((acc, expense) => acc + expense.amount, 0);
+
+  const remainingBudget = budget - totalExpenses;
+
   return (
     <div className="min-h-screen bg-gray-100 flex">
 
@@ -84,7 +106,19 @@ const Dashboard = () => {
 
         {/* Cards */}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+
+          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
+
+            <h3 className="text-gray-500 text-lg">
+              Monthly Budget
+            </h3>
+
+            <p className="text-4xl font-bold mt-3">
+              ₹{budget}
+            </p>
+
+          </div>
 
           <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
             <h3 className="text-gray-500 text-lg">
@@ -92,7 +126,7 @@ const Dashboard = () => {
             </h3>
 
             <p className="text-4xl font-bold mt-3">
-              ₹5000
+              ₹{totalExpenses}
             </p>
           </div>
 
@@ -102,7 +136,7 @@ const Dashboard = () => {
             </h3>
 
             <p className="text-4xl font-bold mt-3">
-              ₹2000
+              ₹{thisMonthExpenses}
             </p>
           </div>
 
@@ -112,7 +146,7 @@ const Dashboard = () => {
             </h3>
 
             <p className="text-4xl font-bold mt-3">
-              ₹8000
+              {remainingBudget}
             </p>
           </div>
 
@@ -120,7 +154,11 @@ const Dashboard = () => {
 
         {/* Recent Expenses */}
 
-        <ExpenseForm fetchExpenses={fetchExpenses} />
+        <ExpenseForm
+          fetchExpenses={fetchExpenses}
+          editExpense={editExpense}
+          setEditExpense={setEditExpense}
+        />
         <div className="bg-white mt-8 p-6 rounded-2xl shadow-md">
 
           <h2 className="text-2xl font-bold mb-5">
@@ -179,6 +217,13 @@ const Dashboard = () => {
                     </td>
 
                     <td className="p-3">
+
+                      <button
+                        onClick={() => setEditExpense(expense)}
+                        className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition mr-2"
+                      >
+                        Edit
+                      </button>
 
                       <button
                         onClick={() => deleteExpense(expense._id)}
