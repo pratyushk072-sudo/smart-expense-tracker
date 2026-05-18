@@ -1,3 +1,4 @@
+import ExpenseForm from "../components/ExpenseForm";
 import { useEffect, useState } from "react";
 import API from "../api/axios";
 import {
@@ -12,6 +13,18 @@ const Dashboard = () => {
   useEffect(() => {
     fetchExpenses();
   }, []);
+
+  const deleteExpense = async (id) => {
+    try {
+
+      await API.delete(`/expenses/${id}`);
+
+      fetchExpenses();
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchExpenses = async () => {
     try {
@@ -107,6 +120,7 @@ const Dashboard = () => {
 
         {/* Recent Expenses */}
 
+        <ExpenseForm fetchExpenses={fetchExpenses} />
         <div className="bg-white mt-8 p-6 rounded-2xl shadow-md">
 
           <h2 className="text-2xl font-bold mb-5">
@@ -166,7 +180,10 @@ const Dashboard = () => {
 
                     <td className="p-3">
 
-                      <button className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600">
+                      <button
+                        onClick={() => deleteExpense(expense._id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                      >
                         Delete
                       </button>
 

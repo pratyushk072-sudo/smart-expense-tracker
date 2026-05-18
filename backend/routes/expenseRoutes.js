@@ -12,7 +12,7 @@ const router = express.Router();
 
 
 // CREATE EXPENSE
-router.post("/", authMiddleware, createExpense);
+router.post("/", createExpense);
 
 
 // GET ALL EXPENSES
@@ -20,7 +20,7 @@ router.get("/", getExpenses);
 
 
 // DELETE EXPENSE
-router.delete("/:id", authMiddleware, deleteExpense);
+router.delete("/:id", deleteExpense);
 
 
 // UPDATE EXPENSE

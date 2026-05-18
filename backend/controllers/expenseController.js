@@ -8,7 +8,7 @@ const createExpense = async (req, res) => {
         const { title, amount, category, date } = req.body;
 
         const expense = new Expense({
-            user: req.user.id,
+            user: "6a073033bf86ed9cbdb4f0c8",
             title,
             amount,
             category,
@@ -43,31 +43,28 @@ const getExpenses = async (req, res) => {
 
 // DELETE EXPENSE
 const deleteExpense = async (req, res) => {
+  try {
 
-    try {
-  
-      const expense = await Expense.findById(req.params.id);
-  
-      if (!expense) {
-        return res.status(404).json({
-          message: "Expense not found",
-        });
-      }
-  
-      await expense.deleteOne();
-  
-      res.status(200).json({
-        message: "Expense deleted successfully",
+    const expense = await Expense.findById(req.params.id);
+
+    if (!expense) {
+      return res.status(404).json({
+        message: "Expense not found",
       });
-  
-    } catch (error) {
-  
-      res.status(500).json({
-        message: error.message,
-      });
-  
     }
-  };
+
+    await expense.deleteOne();
+
+    res.json({
+      message: "Expense deleted",
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 // UPDATE EXPENSE
 const updateExpense = async (req, res) => {

@@ -1,74 +1,36 @@
-import { useState, useEffect } from "react";
-import API from "../services/api";
+import { useState } from "react";
+import API from "../api/axios";
 
-const ExpenseForm = ({ setExpenses, editExpense }) => {
+const ExpenseForm = ({ fetchExpenses }) => {
 
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("");
+  const [formData, setFormData] = useState({
+    title: "",
+    amount: "",
+    category: "",
+    date: "",
+  });
 
-  useEffect(() => {
-
-    if (editExpense) {
-      setTitle(editExpense.title);
-      setAmount(editExpense.amount);
-      setCategory(editExpense.category);
-    }
-
-  }, [editExpense]);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      await API.post("/expenses", formData);
 
-      const token = localStorage.getItem("token");
+      setFormData({
+        title: "",
+        amount: "",
+        category: "",
+        date: "",
+      });
 
-      const expenseData = {
-        title,
-        amount,
-        category,
-      };
-
-      if (editExpense) {
-
-        const res = await API.put(
-          `/expenses/${editExpense._id}`,
-          expenseData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setExpenses((prev) =>
-          prev.map((expense) =>
-            expense._id === editExpense._id
-              ? res.data
-              : expense
-          )
-        );
-
-      } else {
-
-        const res = await API.post(
-          "/expenses",
-          expenseData,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        setExpenses((prev) => [res.data, ...prev]);
-
-      }
-
-      setTitle("");
-      setAmount("");
-      setCategory("");
+      fetchExpenses();
 
     } catch (error) {
       console.log(error);
@@ -76,83 +38,91 @@ const ExpenseForm = ({ setExpenses, editExpense }) => {
   };
 
   return (
-    <div style={{ marginBottom: "20px" }}>
-      <form onSubmit={handleSubmit}>
+    <div className="bg-white p-6 rounded-2xl shadow-md mt-8">
+
+      <h2 className="text-2xl font-bold mb-5">
+        Add Expense
+      </h2>
+
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+      >
 
         <input
           type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          style={{
-            padding: "10px",
-            width: "250px",
-            backgroundColor: "#222",
-            color: "white",
-            border: "1px solid gray",
-          }}
+          name="title"
+          placeholder="Expense Title"
+          value={formData.title}
+          onChange={handleChange}
+          className="p-3 border rounded-lg outline-none"
+          required
         />
-
-        <br /><br />
 
         <input
           type="number"
+          name="amount"
           placeholder="Amount"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          style={{
-            padding: "10px",
-            width: "250px",
-            backgroundColor: "#222",
-            color: "white",
-            border: "1px solid gray",
-          }}
+          value={formData.amount}
+          onChange={handleChange}
+          className="p-3 border rounded-lg outline-none"
+          required
         />
 
-        <br /><br />
-
         <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          style={{
-            padding: "10px",
-            width: "274px",
-            backgroundColor: "#222",
-            color: "white",
-            border: "1px solid gray",
-          }}
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          className="p-3 border rounded-lg outline-none"
+          required
         >
 
-          <option value="">Select Category</option>
+          <option value="">
+            Select Category
+          </option>
 
-          <option value="Food">Food</option>
+          <option value="Food">
+            Food
+          </option>
 
-          <option value="Travel">Travel</option>
+          <option value="Transport">
+            Transport
+          </option>
 
-          <option value="Shopping">Shopping</option>
+          <option value="Shopping">
+            Shopping
+          </option>
 
-          <option value="Entertainment">Entertainment</option>
+          <option value="Entertainment">
+            Entertainment
+          </option>
 
-          <option value="Bills">Bills</option>
+          <option value="Bills">
+            Bills
+          </option>
 
-          <option value="Health">Health</option>
+          <option value="Other">
+            Other
+          </option>
 
         </select>
 
-        <br /><br />
+        <input
+          type="date"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+          className="p-3 border rounded-lg outline-none"
+          required
+        />
 
         <button
-          style={{
-            padding: "10px 20px",
-            cursor: "pointer",
-            backgroundColor: "#2563eb",
-            color: "white",
-            border: "none",
-          }}
           type="submit"
+          className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition md:col-span-2"
         >
           Add Expense
         </button>
+
       </form>
     </div>
   );
