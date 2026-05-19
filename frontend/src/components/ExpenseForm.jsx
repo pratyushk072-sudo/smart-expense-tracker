@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import API from "../api/axios";
+import toast from "react-hot-toast";
 
 const ExpenseForm = ({
   fetchExpenses,
@@ -45,10 +46,12 @@ const ExpenseForm = ({
         );
 
         setEditExpense(null);
+        toast.success("Expense updated successfully");
 
       } else {
 
         await API.post("/expenses", formData);
+        toast.success("Expense added successfully");
 
       }
 
@@ -62,7 +65,7 @@ const ExpenseForm = ({
       fetchExpenses();
 
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong");
     }
   };
 

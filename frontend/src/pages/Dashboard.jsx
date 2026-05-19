@@ -1,6 +1,7 @@
 import ExpenseForm from "../components/ExpenseForm";
 import { useEffect, useState } from "react";
 import API from "../api/axios";
+import toast from "react-hot-toast";
 import {
   FaMoneyBillWave,
   FaChartPie,
@@ -42,8 +43,10 @@ const Dashboard = () => {
 
       fetchExpenses();
 
+      toast.success("Expense deleted successfully");
+
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong");
     }
   };
 
@@ -59,15 +62,15 @@ const Dashboard = () => {
 
   const fetchBudget = async () => {
     try {
-  
+
       const res = await API.get("/budget");
-  
+
       console.log(res.data);
-  
+
       setBudget(
         Number(res.data.monthlyBudget || 0)
       );
-  
+
     } catch (error) {
       console.log(error);
     }
@@ -75,20 +78,20 @@ const Dashboard = () => {
 
   const updateBudget = async () => {
     try {
-  
+
       const res = await API.put(
         "/budget",
         {
           monthlyBudget: Number(budgetInput),
         }
       );
-  
+
       setBudget(
         Number(res.data.monthlyBudget)
       );
-  
+
       setBudgetInput("");
-  
+
     } catch (error) {
       console.log(error);
     }
