@@ -6,6 +6,7 @@ const ExpenseForm = ({
   fetchExpenses,
   editExpense,
   setEditExpense,
+  darkMode,
 }) => {
   const [formData, setFormData] = useState({
 
@@ -70,7 +71,12 @@ const ExpenseForm = ({
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-md mt-8">
+    <div
+      className={`p-6 rounded-2xl shadow-md mt-8 ${darkMode
+          ? "bg-gray-800 text-white"
+          : "bg-white"
+        }`}
+    >
 
       <h2 className="text-2xl font-bold mb-5">
         Add Expense

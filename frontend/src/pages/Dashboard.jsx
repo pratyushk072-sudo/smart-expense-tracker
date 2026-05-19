@@ -2,6 +2,7 @@ import ExpenseForm from "../components/ExpenseForm";
 import { useEffect, useState } from "react";
 import API from "../api/axios";
 import toast from "react-hot-toast";
+import { CSVLink } from "react-csv";
 import {
   FaMoneyBillWave,
   FaChartPie,
@@ -24,6 +25,8 @@ const Dashboard = () => {
   const [editExpense, setEditExpense] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
+  const [sortBy, setSortBy] = useState("newest");
   const userName = localStorage.getItem("name");
 
   const [selectedMonth, setSelectedMonth] = useState(
@@ -122,7 +125,27 @@ const Dashboard = () => {
       matchesSearch &&
       matchesCategory
     );
-  });
+  })
+    .sort((a, b) => {
+
+      if (sortBy === "newest") {
+        return new Date(b.date) - new Date(a.date);
+      }
+
+      if (sortBy === "oldest") {
+        return new Date(a.date) - new Date(b.date);
+      }
+
+      if (sortBy === "highest") {
+        return b.amount - a.amount;
+      }
+
+      if (sortBy === "lowest") {
+        return a.amount - b.amount;
+      }
+
+      return 0;
+    });
 
   const totalExpenses = filteredExpenses.reduce(
     (acc, expense) => acc + expense.amount,
@@ -188,11 +211,28 @@ const Dashboard = () => {
     "#FF4560",
   ];
 
+  const csvData = filteredExpenses.map((expense) => ({
+    Title: expense.title,
+    Amount: expense.amount,
+    Category: expense.category,
+    Date: new Date(expense.date).toLocaleDateString(),
+  }));
+
   return (
-    <div className="min-h-screen bg-gray-100 flex">
+    <div
+      className={`min-h-screen flex ${darkMode
+        ? "bg-gray-900"
+        : "bg-gray-100"
+        }`}
+    >
 
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg p-5">
+      <div
+        className={`w-64 shadow-lg p-5 ${darkMode
+          ? "bg-gray-800 text-white"
+          : "bg-white"
+          }`}
+      >
 
         <h1 className="text-3xl font-bold text-blue-600">
           Expense Tracker
@@ -222,8 +262,12 @@ const Dashboard = () => {
       <div className="flex-1 p-6">
 
         {/* Navbar */}
-        <div className="bg-white p-5 rounded-2xl shadow-md flex justify-between items-center">
-
+        <div
+          className={`p-5 rounded-2xl shadow-md flex justify-between items-center ${darkMode
+            ? "bg-gray-800"
+            : "bg-white"
+            }`}
+        >
           <div>
             <h2 className="text-3xl font-bold">
               Dashboard
@@ -234,16 +278,27 @@ const Dashboard = () => {
             </p>
           </div>
 
-          <button
-            onClick={() => {
-              localStorage.removeItem("token");
-              window.location.href = "/login";
-            }}
-            className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
-          >
-            <FaSignOutAlt />
-            Logout
-          </button>
+          <div className="flex items-center gap-3">
+
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition"
+            >
+              {darkMode ? "Light Mode" : "Dark Mode"}
+            </button>
+
+            <button
+              onClick={() => {
+                localStorage.removeItem("token");
+                window.location.href = "/login";
+              }}
+              className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
+              <FaSignOutAlt />
+              Logout
+            </button>
+
+          </div>
 
         </div>
 
@@ -251,9 +306,17 @@ const Dashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
 
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
+          <div
+            className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+              ? "bg-gray-800 text-white"
+              : "bg-white"
+              }`}
+          >
 
-            <h3 className="text-gray-500 text-lg">
+            <h3 className={`text-lg ${darkMode
+              ? "text-gray-300"
+              : "text-gray-500"
+              }`}>
               Monthly Budget
             </h3>
 
@@ -299,8 +362,16 @@ const Dashboard = () => {
 
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
-            <h3 className="text-gray-500 text-lg">
+          <div
+            className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+              ? "bg-gray-800 text-white"
+              : "bg-white"
+              }`}
+          >
+            <h3 className={`text-lg ${darkMode
+              ? "text-gray-300"
+              : "text-gray-500"
+              }`}>
               Total Expenses
             </h3>
 
@@ -309,8 +380,16 @@ const Dashboard = () => {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
-            <h3 className="text-gray-500 text-lg">
+          <div
+            className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+              ? "bg-gray-800 text-white"
+              : "bg-white"
+              }`}
+          >
+            <h3 className={`text-lg ${darkMode
+              ? "text-gray-300"
+              : "text-gray-500"
+              }`}>
               This Month
             </h3>
 
@@ -319,19 +398,34 @@ const Dashboard = () => {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
-            <h3 className="text-gray-500 text-lg">
+          <div
+            className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+              ? "bg-gray-800 text-white"
+              : "bg-white"
+              }`}
+          >
+            <h3
+              className={`text-lg ${darkMode
+                ? "text-gray-300"
+                : "text-gray-500"
+                }`}
+            >
               Remaining Budget
             </h3>
 
             <p className="text-4xl font-bold mt-3">
-              {remainingBudget}
+              ₹{remainingBudget}
             </p>
           </div>
 
         </div>
 
-        <div className="bg-white mt-8 p-6 rounded-2xl shadow-md">
+        <div
+          className={`mt-8 p-6 rounded-2xl shadow-md ${darkMode
+            ? "bg-gray-800 text-white"
+            : "bg-white"
+            }`}
+        >
 
           <h2 className="text-2xl font-bold mb-5">
             Expense Analytics
@@ -353,7 +447,7 @@ const Dashboard = () => {
                   label
                 >
 
-                  {categoryData.map((entry, index) => (
+                  {categoryData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS[index % COLORS.length]}
@@ -380,12 +474,30 @@ const Dashboard = () => {
           fetchExpenses={fetchExpenses}
           editExpense={editExpense}
           setEditExpense={setEditExpense}
+          darkMode={darkMode}
         />
-        <div className="bg-white mt-8 p-6 rounded-2xl shadow-md">
+        <div
+          className={`mt-8 p-6 rounded-2xl shadow-md ${darkMode
+            ? "bg-gray-800 text-white"
+            : "bg-white"
+            }`}
+        >
 
-          <h2 className="text-2xl font-bold mb-5">
-            Recent Expenses
-          </h2>
+          <div className="flex justify-between items-center mb-5">
+
+            <h2 className="text-2xl font-bold">
+              Recent Expenses
+            </h2>
+
+            <CSVLink
+              data={csvData}
+              filename={"expenses.csv"}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+            >
+              Export CSV
+            </CSVLink>
+
+          </div>
 
           <div className="flex flex-col md:flex-row gap-4 mb-5">
 
@@ -394,13 +506,19 @@ const Dashboard = () => {
               placeholder="Search Expense..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="p-3 border rounded-lg outline-none flex-1"
+              className={`p-3 border rounded-lg outline-none flex-1 ${darkMode
+                ? "bg-gray-700 text-white placeholder-gray-400 border-gray-600"
+                : "bg-white"
+                }`}
             />
 
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="p-3 border rounded-lg outline-none"
+              className={`p-3 border rounded-lg outline-none ${darkMode
+                ? "bg-gray-700 text-white border-gray-600"
+                : "bg-white"
+                }`}
             >
 
               <option value="">
@@ -433,6 +551,31 @@ const Dashboard = () => {
 
             </select>
 
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className={`p-3 border rounded-lg outline-none ${darkMode
+                ? "bg-gray-700 text-white border-gray-600"
+                : "bg-white"
+                }`}
+            >
+              <option value="newest">
+                Newest First
+              </option>
+
+              <option value="oldest">
+                Oldest First
+              </option>
+
+              <option value="highest">
+                Highest Amount
+              </option>
+
+              <option value="lowest">
+                Lowest Amount
+              </option>
+            </select>
+
           </div>
 
           <div className="overflow-x-auto">
@@ -441,13 +584,21 @@ const Dashboard = () => {
               type="month"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="border p-2 rounded mb-4"
+              className={`border p-2 rounded mb-4 ${darkMode
+                  ? "bg-gray-700 text-white border-gray-600"
+                  : "bg-white"
+                }`}
             />
 
             <table className="w-full border-collapse">
 
               <thead>
-                <tr className="bg-gray-100">
+                <tr
+                  className={`${darkMode
+                    ? "bg-gray-700 text-white"
+                    : "bg-gray-100"
+                    }`}
+                >
 
                   <th className="p-3 text-left">
                     Title
@@ -474,45 +625,63 @@ const Dashboard = () => {
 
               <tbody>
 
-                {filteredExpenses.map((expense) => (
-                  <tr key={expense._id} className="border-b">
+                {filteredExpenses.length > 0 ? (
 
-                    <td className="p-3">
-                      {expense.title}
+                  filteredExpenses.map((expense) => (
+                    <tr key={expense._id} className="border-b">
+
+                      <td className="p-3">
+                        {expense.title}
+                      </td>
+
+                      <td className="p-3">
+                        ₹{expense.amount}
+                      </td>
+
+                      <td className="p-3">
+                        {expense.category}
+                      </td>
+
+                      <td className="p-3">
+                        {new Date(expense.date).toLocaleDateString()}
+                      </td>
+
+                      <td className="p-3">
+
+                        <button
+                          onClick={() => setEditExpense(expense)}
+                          className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition mr-2"
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          onClick={() => deleteExpense(expense._id)}
+                          className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+
+                      </td>
+
+                    </tr>
+                  ))
+
+                ) : (
+
+                  <tr>
+                    <td
+                      colSpan="5"
+                      className={`text-center p-5 ${darkMode
+                        ? "text-gray-300"
+                        : "text-gray-500"
+                        }`}
+                    >
+                      No expenses found
                     </td>
-
-                    <td className="p-3">
-                      ₹{expense.amount}
-                    </td>
-
-                    <td className="p-3">
-                      {expense.category}
-                    </td>
-
-                    <td className="p-3">
-                      {new Date(expense.date).toLocaleDateString()}
-                    </td>
-
-                    <td className="p-3">
-
-                      <button
-                        onClick={() => setEditExpense(expense)}
-                        className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition mr-2"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() => deleteExpense(expense._id)}
-                        className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600"
-                      >
-                        Delete
-                      </button>
-
-                    </td>
-
                   </tr>
-                ))}
+
+                )}
 
               </tbody>
 
