@@ -634,7 +634,13 @@ const Dashboard = () => {
                 {filteredExpenses.length > 0 ? (
 
                   filteredExpenses.map((expense) => (
-                    <tr key={expense._id} className="border-b">
+                    <tr
+                      key={expense._id}
+                      className={`border-b transition duration-200 ${darkMode
+                          ? "hover:bg-gray-700"
+                          : "hover:bg-gray-100"
+                        }`}
+                    >
 
                       <td className="p-3">
                         {expense.title}
@@ -645,7 +651,22 @@ const Dashboard = () => {
                       </td>
 
                       <td className="p-3">
-                        {expense.category}
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-semibold ${expense.category === "Food"
+                            ? "bg-green-100 text-green-700"
+                            : expense.category === "Transport"
+                              ? "bg-blue-100 text-blue-700"
+                              : expense.category === "Shopping"
+                                ? "bg-purple-100 text-purple-700"
+                                : expense.category === "Entertainment"
+                                  ? "bg-orange-100 text-orange-700"
+                                  : expense.category === "Bills"
+                                    ? "bg-red-100 text-red-700"
+                                    : "bg-gray-100 text-gray-700"
+                            }`}
+                        >
+                          {expense.category}
+                        </span>
                       </td>
 
                       <td className="p-3">
