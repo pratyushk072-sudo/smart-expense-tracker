@@ -269,11 +269,17 @@ const Dashboard = () => {
             }`}
         >
           <div>
-            <h2 className="text-3xl font-bold">
+            <h2
+              className={`text-3xl font-bold ${darkMode ? "text-white" : "text-black"
+                }`}
+            >
               Dashboard
             </h2>
 
-            <p className="text-gray-500 mt-1">
+            <p
+              className={`mt-1 ${darkMode ? "text-white" : "text-gray-500"
+                }`}
+            >
               Welcome back, {userName} 👋
             </p>
           </div>
@@ -585,8 +591,8 @@ const Dashboard = () => {
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
               className={`border p-2 rounded mb-4 ${darkMode
-                  ? "bg-gray-700 text-white border-gray-600"
-                  : "bg-white"
+                ? "bg-gray-700 text-white border-gray-600"
+                : "bg-white"
                 }`}
             />
 

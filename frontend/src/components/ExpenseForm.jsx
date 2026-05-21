@@ -9,7 +9,6 @@ const ExpenseForm = ({
   darkMode,
 }) => {
   const [formData, setFormData] = useState({
-
     title: "",
     amount: "",
     category: "",
@@ -38,9 +37,7 @@ const ExpenseForm = ({
     e.preventDefault();
 
     try {
-
       if (editExpense) {
-
         await API.put(
           `/expenses/${editExpense._id}`,
           formData
@@ -48,12 +45,9 @@ const ExpenseForm = ({
 
         setEditExpense(null);
         toast.success("Expense updated successfully");
-
       } else {
-
         await API.post("/expenses", formData);
         toast.success("Expense added successfully");
-
       }
 
       setFormData({
@@ -64,7 +58,6 @@ const ExpenseForm = ({
       });
 
       fetchExpenses();
-
     } catch (error) {
       toast.error("Something went wrong");
     }
@@ -74,11 +67,13 @@ const ExpenseForm = ({
     <div
       className={`p-6 rounded-2xl shadow-md mt-8 ${darkMode
           ? "bg-gray-800 text-white"
-          : "bg-white"
+          : "bg-white text-black"
         }`}
     >
-
-      <h2 className="text-2xl font-bold mb-5">
+      <h2
+        className={`text-2xl font-bold mb-5 ${darkMode ? "text-white" : "text-black"
+          }`}
+      >
         Add Expense
       </h2>
 
@@ -86,35 +81,45 @@ const ExpenseForm = ({
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-4"
       >
-
+        {/* Expense Title */}
         <input
           type="text"
           name="title"
           placeholder="Expense Title"
           value={formData.title}
           onChange={handleChange}
-          className="p-3 border rounded-lg outline-none"
+          className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${darkMode
+              ? "bg-[#1e293b] text-white border-white placeholder:text-gray-300"
+              : "bg-white text-black border-black placeholder:text-gray-500"
+            }`}
           required
         />
 
+        {/* Amount */}
         <input
           type="number"
           name="amount"
           placeholder="Amount"
           value={formData.amount}
           onChange={handleChange}
-          className="p-3 border rounded-lg outline-none"
+          className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${darkMode
+              ? "bg-[#1e293b] text-white border-white placeholder:text-gray-300"
+              : "bg-white text-black border-black placeholder:text-gray-500"
+            }`}
           required
         />
 
+        {/* Category */}
         <select
           name="category"
           value={formData.category}
           onChange={handleChange}
-          className="p-3 border rounded-lg outline-none"
+          className={`w-full p-3 rounded-lg border outline-none focus:ring-2 focus:ring-blue-500 ${darkMode
+              ? "bg-[#1e293b] text-white border-white"
+              : "bg-white text-black border-black"
+            }`}
           required
         >
-
           <option value="">
             Select Category
           </option>
@@ -142,25 +147,28 @@ const ExpenseForm = ({
           <option value="Other">
             Other
           </option>
-
         </select>
 
+        {/* Date */}
         <input
           type="date"
           name="date"
           value={formData.date}
           onChange={handleChange}
-          className="p-3 border rounded-lg outline-none"
+          className={`w-full p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 ${darkMode
+              ? "bg-[#1e293b] text-white border-white"
+              : "bg-white text-black border-black"
+            }`}
           required
         />
 
+        {/* Button */}
         <button
           type="submit"
           className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition md:col-span-2"
         >
           {editExpense ? "Update Expense" : "Add Expense"}
         </button>
-
       </form>
     </div>
   );
