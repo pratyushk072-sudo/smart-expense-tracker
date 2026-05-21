@@ -155,6 +155,10 @@ const Dashboard = () => {
   const thisMonthExpenses = totalExpenses;
 
   const remainingBudget = Number(budget) - totalExpenses;
+  const budgetUsedPercentage =
+    budget > 0
+      ? (totalExpenses / budget) * 100
+      : 0;
 
   const categoryData = [
 
@@ -228,7 +232,7 @@ const Dashboard = () => {
 
       {/* Sidebar */}
       <div
-        className={`w-64 shadow-lg p-5 ${darkMode
+        className={`hidden md:block w-64 shadow-lg p-5 ${darkMode
           ? "bg-gray-800 text-white"
           : "bg-white"
           }`}
@@ -240,17 +244,41 @@ const Dashboard = () => {
 
         <div className="mt-10 space-y-3">
 
-          <button className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 transition">
+          {/* Dashboard Button */}
+          <button
+            onClick={() =>
+              document
+                .getElementById("dashboard-section")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
+          >
             <FaChartPie />
             Dashboard
           </button>
 
-          <button className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 transition">
+          {/* Expenses Button */}
+          <button
+            onClick={() =>
+              document
+                .getElementById("expenses-section")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
+          >
             <FaMoneyBillWave />
             Expenses
           </button>
 
-          <button className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 transition">
+          {/* Add Expense Button */}
+          <button
+            onClick={() =>
+              document
+                .getElementById("add-expense-section")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
+          >
             <FaPlus />
             Add Expense
           </button>
@@ -261,179 +289,231 @@ const Dashboard = () => {
       {/* Main Content */}
       <div className="flex-1 p-6">
 
-        {/* Navbar */}
-        <div
-          className={`p-5 rounded-2xl shadow-md flex justify-between items-center ${darkMode
-            ? "bg-gray-800"
-            : "bg-white"
-            }`}
-        >
-          <div>
-            <h2
-              className={`text-3xl font-bold ${darkMode ? "text-white" : "text-black"
-                }`}
-            >
-              Dashboard
-            </h2>
-
-            <p
-              className={`mt-1 ${darkMode ? "text-white" : "text-gray-500"
-                }`}
-            >
-              Welcome back, {userName} 👋
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition"
-            >
-              {darkMode ? "Light Mode" : "Dark Mode"}
-            </button>
-
-            <button
-              onClick={() => {
-                localStorage.removeItem("token");
-                window.location.href = "/login";
-              }}
-              className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
-            >
-              <FaSignOutAlt />
-              Logout
-            </button>
-
-          </div>
-
-        </div>
-
-        {/* Cards */}
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
-
+        <div id="dashboard-section">
+          {/* Navbar */}
           <div
-            className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
-              ? "bg-gray-800 text-white"
+            className={`p-5 rounded-2xl shadow-md flex justify-between items-center ${darkMode
+              ? "bg-gray-800"
               : "bg-white"
               }`}
           >
+            <div>
+              <h2
+                className={`text-3xl font-bold ${darkMode ? "text-white" : "text-black"
+                  }`}
+              >
+                Dashboard
+              </h2>
 
-            <h3 className={`text-lg ${darkMode
-              ? "text-gray-300"
-              : "text-gray-500"
-              }`}>
-              Monthly Budget
-            </h3>
+              <p
+                className={`mt-1 ${darkMode ? "text-white" : "text-gray-500"
+                  }`}
+              >
+                Welcome back, {userName} 👋
+              </p>
+            </div>
 
-            <p className="text-4xl font-bold mt-3">
-              ₹{Number(budget)}
-            </p>
-
-            {isEditingBudget ? (
-
-              <div className="flex gap-2 mt-4">
-
-                <input
-                  type="number"
-                  placeholder="Set Budget"
-                  value={budgetInput}
-                  onChange={(e) => setBudgetInput(e.target.value)}
-                  className="border p-2 rounded-lg w-full"
-                />
-
-                <button
-                  onClick={async () => {
-                    await updateBudget();
-
-                    setIsEditingBudget(false);
-                  }}
-                  className="bg-blue-600 text-white px-4 rounded-lg"
-                >
-                  Save
-                </button>
-
-              </div>
-
-            ) : (
+            <div className="flex items-center gap-3">
 
               <button
-                onClick={() => setIsEditingBudget(true)}
-                className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg"
+                onClick={() => setDarkMode(!darkMode)}
+                className="bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition"
               >
-                Edit Budget
+                {darkMode ? "Light Mode" : "Dark Mode"}
               </button>
 
-            )}
+              <button
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  window.location.href = "/login";
+                }}
+                className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
+              >
+                <FaSignOutAlt />
+                Logout
+              </button>
+
+            </div>
 
           </div>
 
-          <div
-            className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
-              ? "bg-gray-800 text-white"
-              : "bg-white"
-              }`}
-          >
-            <h3 className={`text-lg ${darkMode
-              ? "text-gray-300"
-              : "text-gray-500"
-              }`}>
-              Total Expenses
-            </h3>
+          {/* Cards */}
 
-            <p className="text-4xl font-bold mt-3">
-              ₹{totalExpenses}
-            </p>
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
 
-          <div
-            className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
-              ? "bg-gray-800 text-white"
-              : "bg-white"
-              }`}
-          >
-            <h3 className={`text-lg ${darkMode
-              ? "text-gray-300"
-              : "text-gray-500"
-              }`}>
-              This Month
-            </h3>
-
-            <p className="text-4xl font-bold mt-3">
-              ₹{thisMonthExpenses}
-            </p>
-          </div>
-
-          <div
-            className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
-              ? "bg-gray-800 text-white"
-              : "bg-white"
-              }`}
-          >
-            <h3
-              className={`text-lg ${darkMode
-                ? "text-gray-300"
-                : "text-gray-500"
+            <div
+              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+                ? "bg-gray-800 text-white"
+                : "bg-white"
                 }`}
             >
-              Remaining Budget
-            </h3>
 
-            <p className="text-4xl font-bold mt-3">
-              ₹{remainingBudget}
-            </p>
+              <h3 className={`text-lg ${darkMode
+                ? "text-gray-300"
+                : "text-gray-500"
+                }`}>
+                Monthly Budget
+              </h3>
+
+              <p className="text-4xl font-bold mt-3">
+                ₹{Number(budget)}
+              </p>
+
+              {isEditingBudget ? (
+
+                <div className="flex gap-2 mt-4">
+
+                  <input
+                    type="number"
+                    placeholder="Set Budget"
+                    value={budgetInput}
+                    onChange={(e) => setBudgetInput(e.target.value)}
+                    className="border p-2 rounded-lg w-full"
+                  />
+
+                  <button
+                    onClick={async () => {
+                      await updateBudget();
+
+                      setIsEditingBudget(false);
+                    }}
+                    className="bg-blue-600 text-white px-4 rounded-lg"
+                  >
+                    Save
+                  </button>
+
+                </div>
+
+              ) : (
+
+                <button
+                  onClick={() => setIsEditingBudget(true)}
+                  className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Edit Budget
+                </button>
+
+              )}
+
+            </div>
+
+            <div
+              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+                ? "bg-gray-800 text-white"
+                : "bg-white"
+                }`}
+            >
+              <h3 className={`text-lg ${darkMode
+                ? "text-gray-300"
+                : "text-gray-500"
+                }`}>
+                Total Expenses
+              </h3>
+
+              <p className="text-4xl font-bold mt-3">
+                ₹{totalExpenses}
+              </p>
+            </div>
+
+            <div
+              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+                ? "bg-gray-800 text-white"
+                : "bg-white"
+                }`}
+            >
+              <h3 className={`text-lg ${darkMode
+                ? "text-gray-300"
+                : "text-gray-500"
+                }`}>
+                This Month
+              </h3>
+
+              <p className="text-4xl font-bold mt-3">
+                ₹{thisMonthExpenses}
+              </p>
+            </div>
+
+            <div
+              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+                ? "bg-gray-800 text-white"
+                : "bg-white"
+                }`}
+            >
+              <h3
+                className={`text-lg ${darkMode
+                  ? "text-gray-300"
+                  : "text-gray-500"
+                  }`}
+              >
+                Remaining Budget
+              </h3>
+
+              <p className="text-4xl font-bold mt-3">
+                ₹{remainingBudget}
+              </p>
+            </div>
+
           </div>
 
-        </div>
+          <div
+            className={`mt-8 p-6 rounded-2xl shadow-md ${darkMode
+              ? "bg-gray-800 text-white"
+              : "bg-white"
+              }`}
+          >
 
-        <div
-          className={`mt-8 p-6 rounded-2xl shadow-md ${darkMode
-            ? "bg-gray-800 text-white"
-            : "bg-white"
-            }`}
-        >
+            <div
+              className={`mt-6 p-6 rounded-2xl border shadow-lg ${darkMode
+                ? "bg-gray-800 border-gray-700"
+                : "bg-white border-gray-200"
+                }`}
+            >
+              <div className="flex justify-between mb-2">
+                <h3
+                  className={`font-semibold ${darkMode ? "text-white" : "text-black"
+                    }`}
+                >
+                  Budget Usage
+                </h3>
 
-          <h2 className="text-2xl font-bold mb-5">
+                <span
+                  className={`font-bold ${darkMode ? "text-white" : "text-black"
+                    }`}
+                >
+                  {budgetUsedPercentage.toFixed(1)}%
+                </span>
+              </div>
+
+              <div className="w-full bg-gray-300/70 rounded-full h-4 overflow-hidden">
+                <div
+                  className={`h-4 rounded-full transition-all duration-500 ${budgetUsedPercentage < 50
+                    ? "bg-green-500"
+                    : budgetUsedPercentage < 80
+                      ? "bg-yellow-500"
+                      : "bg-red-500"
+                    }`}
+                  style={{
+                    width: `${Math.min(
+                      budgetUsedPercentage,
+                      100
+                    )}%`,
+                  }}
+                ></div>
+              </div>
+
+              <p
+                className={`mt-2 text-sm ${darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+              >
+                ₹{totalExpenses} spent out of ₹{budget}
+              </p>
+            </div>
+          </div>
+
+          <h2
+            className={`text-2xl font-bold mb-5 ${darkMode ? "text-white" : "text-black"
+              }`}
+          >
             Expense Analytics
           </h2>
 
@@ -476,13 +556,18 @@ const Dashboard = () => {
 
         {/* Recent Expenses */}
 
-        <ExpenseForm
-          fetchExpenses={fetchExpenses}
-          editExpense={editExpense}
-          setEditExpense={setEditExpense}
-          darkMode={darkMode}
-        />
+        <div id="add-expense-section">
+
+          <ExpenseForm
+            fetchExpenses={fetchExpenses}
+            editExpense={editExpense}
+            setEditExpense={setEditExpense}
+            darkMode={darkMode}
+          />
+
+        </div>
         <div
+          id="expenses-section"
           className={`mt-8 p-6 rounded-2xl shadow-md ${darkMode
             ? "bg-gray-800 text-white"
             : "bg-white"
@@ -637,8 +722,8 @@ const Dashboard = () => {
                     <tr
                       key={expense._id}
                       className={`border-b transition duration-200 ${darkMode
-                          ? "hover:bg-gray-700"
-                          : "hover:bg-gray-100"
+                        ? "hover:bg-gray-700"
+                        : "hover:bg-gray-100"
                         }`}
                     >
 
