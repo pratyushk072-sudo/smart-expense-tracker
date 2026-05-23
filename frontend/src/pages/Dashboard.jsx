@@ -9,6 +9,10 @@ import {
   FaPlus,
   FaSignOutAlt,
   FaBars,
+  FaWallet,
+  FaPiggyBank,
+  FaChartLine,
+  FaShoppingCart,
 } from "react-icons/fa";
 import {
   PieChart,
@@ -256,7 +260,7 @@ const Dashboard = () => {
       </button>
 
       <div
-        className={`fixed md:static top-0 left-0 h-full z-40 transform transition-transform duration-300
+        className={`fixed md:sticky top-0 left-0 h-screen z-40 transform transition-transform duration-300
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0 w-64 shadow-lg p-5 ${darkMode
             ? "bg-gray-800 text-white"
@@ -376,12 +380,13 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
-                ? "bg-gray-800 text-white"
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+                ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
                 }`}
             >
 
+              <FaWallet className="text-3xl text-blue-400 mb-3" />
               <h3 className={`text-lg ${darkMode
                 ? "text-gray-300"
                 : "text-gray-500"
@@ -432,11 +437,13 @@ const Dashboard = () => {
             </div>
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
-                ? "bg-gray-800 text-white"
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+                ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
                 }`}
             >
+
+              <FaMoneyBillWave className="text-3xl text-red-400 mb-3" />
               <h3 className={`text-lg ${darkMode
                 ? "text-gray-300"
                 : "text-gray-500"
@@ -450,11 +457,13 @@ const Dashboard = () => {
             </div>
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
-                ? "bg-gray-800 text-white"
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+                ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
                 }`}
             >
+
+              <FaChartLine className="text-3xl text-green-400 mb-3" />
               <h3 className={`text-lg ${darkMode
                 ? "text-gray-300"
                 : "text-gray-500"
@@ -468,11 +477,13 @@ const Dashboard = () => {
             </div>
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
-                ? "bg-gray-800 text-white"
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+                ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
                 }`}
             >
+
+              <FaPiggyBank className="text-3xl text-yellow-400 mb-3" />
               <h3
                 className={`text-lg ${darkMode
                   ? "text-gray-300"
@@ -488,8 +499,8 @@ const Dashboard = () => {
             </div>
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
-                ? "bg-gray-800 text-white"
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+                ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
                 }`}
             >
@@ -506,11 +517,13 @@ const Dashboard = () => {
             </div>
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
-                ? "bg-gray-800 text-white"
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+                ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
                 }`}
             >
+
+              <FaShoppingCart className="text-3xl text-pink-400 mb-3" />
               <h3 className={`text-lg ${darkMode
                 ? "text-gray-300"
                 : "text-gray-500"
@@ -535,7 +548,7 @@ const Dashboard = () => {
 
             <div
               className={`mt-6 p-6 rounded-2xl border shadow-lg ${darkMode
-                ? "bg-gray-800 border-gray-700"
+                ? "bg-gradient-to-br from-gray-700 to-gray-900 border-gray-700"
                 : "bg-white border-gray-200"
                 }`}
             >
@@ -557,7 +570,7 @@ const Dashboard = () => {
 
               <div className="w-full bg-gray-300/70 rounded-full h-4 overflow-hidden">
                 <div
-                  className={`h-4 rounded-full transition-all duration-500 ${budgetUsedPercentage < 50
+                  className={`h-4 rounded-full transition-all duration-700 ease-in-out ${budgetUsedPercentage < 50
                     ? "bg-green-500"
                     : budgetUsedPercentage < 80
                       ? "bg-yellow-500"
@@ -595,10 +608,15 @@ const Dashboard = () => {
               Expense Analytics
             </h2>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="flex flex-col gap-6 item-center">
 
               {/* Chart */}
-              <div className="lg:col-span-2 h-[400px] flex justify-center items-center">
+              <div
+                className={`lg:col-span-3 h-[420px] flex justify-center items-center p-4 rounded-2xl ${darkMode
+                    ? "bg-gray-900/40 border border-gray-700"
+                    : "bg-gray-100"
+                  }`}
+              >
 
                 <ResponsiveContainer>
 
@@ -635,8 +653,8 @@ const Dashboard = () => {
 
               {/* Analytics Summary */}
               <div
-                className={`p-6 rounded-2xl shadow-lg h-full space-y-4 ${darkMode
-                  ? "bg-gray-800 text-white"
+                className={`p-6 rounded-2xl shadow-xl w-full flex flex-col justify-center space-y-6 ${darkMode
+                  ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                   : "bg-gray-100"
                   }`}
               >
