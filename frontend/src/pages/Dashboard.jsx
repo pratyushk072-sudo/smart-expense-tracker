@@ -376,7 +376,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gray-800 text-white"
                 : "bg-white"
                 }`}
@@ -432,7 +432,7 @@ const Dashboard = () => {
             </div>
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gray-800 text-white"
                 : "bg-white"
                 }`}
@@ -450,7 +450,7 @@ const Dashboard = () => {
             </div>
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gray-800 text-white"
                 : "bg-white"
                 }`}
@@ -468,7 +468,7 @@ const Dashboard = () => {
             </div>
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gray-800 text-white"
                 : "bg-white"
                 }`}
@@ -488,7 +488,7 @@ const Dashboard = () => {
             </div>
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gray-800 text-white"
                 : "bg-white"
                 }`}
@@ -506,7 +506,7 @@ const Dashboard = () => {
             </div>
 
             <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gray-800 text-white"
                 : "bg-white"
                 }`}
@@ -595,38 +595,97 @@ const Dashboard = () => {
               Expense Analytics
             </h2>
 
-            <div className="w-full h-[400px]">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-              <ResponsiveContainer>
+              {/* Chart */}
+              <div className="lg:col-span-2 h-[400px] flex justify-center items-center">
 
-                <PieChart>
+                <ResponsiveContainer>
 
-                  <Pie
-                    data={categoryData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={120}
-                    label
-                  >
+                  <PieChart>
 
-                    {categoryData.map((_, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
+                    <Pie
+                      data={categoryData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={120}
+                      label
+                    >
 
-                  </Pie>
+                      {categoryData.map((_, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
 
-                  <Tooltip />
+                    </Pie>
 
-                  <Legend />
+                    <Tooltip />
 
-                </PieChart>
+                    <Legend />
 
-              </ResponsiveContainer>
+                  </PieChart>
+
+                </ResponsiveContainer>
+
+              </div>
+
+              {/* Analytics Summary */}
+              <div
+                className={`p-6 rounded-2xl shadow-lg h-full space-y-4 ${darkMode
+                  ? "bg-gray-800 text-white"
+                  : "bg-gray-100"
+                  }`}
+              >
+                <h3 className="text-2xl font-bold">
+                  Insights
+                </h3>
+
+                <div>
+                  <p className="text-gray-400 text-sm">
+                    Total Transactions
+                  </p>
+
+                  <h2 className="text-3xl font-bold">
+                    {filteredExpenses.length}
+                  </h2>
+                </div>
+
+                <div>
+                  <p className="text-gray-400 text-sm">
+                    Highest Spending Category
+                  </p>
+
+                  <h2 className="text-2xl font-bold">
+                    {highestCategory.name}
+                  </h2>
+                </div>
+
+                <div>
+                  <p className="text-gray-400 text-sm">
+                    Average Expense
+                  </p>
+
+                  <h2 className="text-2xl font-bold">
+                    ₹{averageExpense}
+                  </h2>
+                </div>
+
+                <div>
+                  <p className="text-gray-400 text-sm">
+                    Budget Status
+                  </p>
+
+                  <h2 className="text-2xl font-bold text-green-400">
+                    {remainingBudget >= 0
+                      ? "On Track ✅"
+                      : "Budget Exceeded ❌"}
+                  </h2>
+                </div>
+              </div>
 
             </div>
 
