@@ -8,6 +8,7 @@ import {
   FaChartPie,
   FaPlus,
   FaSignOutAlt,
+  FaBars,
 } from "react-icons/fa";
 import {
   PieChart,
@@ -28,6 +29,7 @@ const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [sortBy, setSortBy] = useState("newest");
   const userName = localStorage.getItem("name");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [selectedMonth, setSelectedMonth] = useState(
     new Date().toISOString().slice(0, 7)
@@ -155,6 +157,13 @@ const Dashboard = () => {
   const thisMonthExpenses = totalExpenses;
 
   const remainingBudget = Number(budget) - totalExpenses;
+  const totalTransactions = filteredExpenses.length;
+
+  const averageExpense =
+    totalTransactions > 0
+      ? (totalExpenses / totalTransactions).toFixed(2)
+      : 0;
+
   const budgetUsedPercentage =
     budget > 0
       ? (totalExpenses / budget) * 100
@@ -206,6 +215,12 @@ const Dashboard = () => {
 
   ];
 
+  const highestCategory = categoryData.reduce(
+    (max, category) =>
+      category.value > max.value ? category : max,
+    { name: "None", value: 0 }
+  );
+
   const COLORS = [
     "#0088FE",
     "#00C49F",
@@ -223,6 +238,7 @@ const Dashboard = () => {
   }));
 
   return (
+
     <div
       className={`min-h-screen flex ${darkMode
         ? "bg-gray-900"
@@ -231,10 +247,20 @@ const Dashboard = () => {
     >
 
       {/* Sidebar */}
+
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-3 rounded-lg shadow-lg"
+      >
+        <FaBars />
+      </button>
+
       <div
-        className={`hidden md:block w-64 shadow-lg p-5 ${darkMode
-          ? "bg-gray-800 text-white"
-          : "bg-white"
+        className={`fixed md:static top-0 left-0 h-full z-40 transform transition-transform duration-300
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          md:translate-x-0 w-64 shadow-lg p-5 ${darkMode
+            ? "bg-gray-800 text-white"
+            : "bg-white"
           }`}
       >
 
@@ -286,13 +312,21 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Main Content */}
       <div className="flex-1 p-6">
 
         <div id="dashboard-section">
           {/* Navbar */}
           <div
-            className={`p-5 rounded-2xl shadow-md flex justify-between items-center ${darkMode
+            className={`p-5 rounded-2xl shadow-md flex flex-col md:flex-row justify-between md:items-center gap-4 ${darkMode
               ? "bg-gray-800"
               : "bg-white"
               }`}
@@ -339,7 +373,7 @@ const Dashboard = () => {
 
           {/* Cards */}
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
 
             <div
               className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
@@ -453,7 +487,44 @@ const Dashboard = () => {
               </p>
             </div>
 
+            <div
+              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+                ? "bg-gray-800 text-white"
+                : "bg-white"
+                }`}
+            >
+              <h3 className={`text-lg ${darkMode
+                ? "text-gray-300"
+                : "text-gray-500"
+                }`}>
+                Average Expense
+              </h3>
+
+              <p className="text-4xl font-bold mt-3">
+                ₹{averageExpense}
+              </p>
+            </div>
+
+            <div
+              className={`p-6 rounded-2xl shadow-md hover:shadow-xl transition ${darkMode
+                ? "bg-gray-800 text-white"
+                : "bg-white"
+                }`}
+            >
+              <h3 className={`text-lg ${darkMode
+                ? "text-gray-300"
+                : "text-gray-500"
+                }`}>
+                Top Category
+              </h3>
+
+              <p className="text-2xl font-bold mt-3">
+                {highestCategory.name}
+              </p>
+            </div>
+
           </div>
+
 
           <div
             className={`mt-8 p-6 rounded-2xl shadow-md ${darkMode
@@ -510,45 +581,54 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <h2
-            className={`text-2xl font-bold mb-5 ${darkMode ? "text-white" : "text-black"
+          <div
+            className={`mt-8 p-6 rounded-2xl shadow-md ${darkMode
+              ? "bg-gray-800 text-white"
+              : "bg-white"
               }`}
           >
-            Expense Analytics
-          </h2>
 
-          <div className="w-full h-[400px]">
+            <h2
+              className={`text-2xl font-bold mb-5 ${darkMode ? "text-white" : "text-black"
+                }`}
+            >
+              Expense Analytics
+            </h2>
 
-            <ResponsiveContainer>
+            <div className="w-full h-[400px]">
 
-              <PieChart>
+              <ResponsiveContainer>
 
-                <Pie
-                  data={categoryData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={120}
-                  label
-                >
+                <PieChart>
 
-                  {categoryData.map((_, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
+                  <Pie
+                    data={categoryData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={120}
+                    label
+                  >
 
-                </Pie>
+                    {categoryData.map((_, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
 
-                <Tooltip />
+                  </Pie>
 
-                <Legend />
+                  <Tooltip />
 
-              </PieChart>
+                  <Legend />
 
-            </ResponsiveContainer>
+                </PieChart>
+
+              </ResponsiveContainer>
+
+            </div>
 
           </div>
 
@@ -804,7 +884,7 @@ const Dashboard = () => {
         </div>
 
       </div>
-    </div>
+    </div >
   );
 };
 
