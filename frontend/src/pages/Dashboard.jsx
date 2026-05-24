@@ -1,5 +1,6 @@
 import ExpenseForm from "../components/ExpenseForm";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import toast from "react-hot-toast";
 import { CSVLink } from "react-csv";
@@ -21,9 +22,17 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  LineChart,
+  Line,
 } from "recharts";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [expenses, setExpenses] = useState([]);
   const [budget, setBudget] = useState(Number(0));
   const [budgetInput, setBudgetInput] = useState("");
@@ -158,6 +167,25 @@ const Dashboard = () => {
     0
   );
 
+  const currentMonth = new Date().toLocaleString("default", {
+    month: "short",
+  });
+
+  const monthlyData = [
+    { month: "Jan", amount: currentMonth === "Jan" ? totalExpenses : 0 },
+    { month: "Feb", amount: currentMonth === "Feb" ? totalExpenses : 0 },
+    { month: "Mar", amount: currentMonth === "Mar" ? totalExpenses : 0 },
+    { month: "Apr", amount: currentMonth === "Apr" ? totalExpenses : 0 },
+    { month: "May", amount: currentMonth === "May" ? totalExpenses : 0 },
+    { month: "Jun", amount: currentMonth === "Jun" ? totalExpenses : 0 },
+    { month: "Jul", amount: currentMonth === "Jul" ? totalExpenses : 0 },
+    { month: "Aug", amount: currentMonth === "Aug" ? totalExpenses : 0 },
+    { month: "Sep", amount: currentMonth === "Sep" ? totalExpenses : 0 },
+    { month: "Oct", amount: currentMonth === "Oct" ? totalExpenses : 0 },
+    { month: "Nov", amount: currentMonth === "Nov" ? totalExpenses : 0 },
+    { month: "Dec", amount: currentMonth === "Dec" ? totalExpenses : 0 },
+  ];
+
   const thisMonthExpenses = totalExpenses;
 
   const remainingBudget = Number(budget) - totalExpenses;
@@ -287,17 +315,26 @@ const Dashboard = () => {
             Dashboard
           </button>
 
-          {/* Expenses Button */}
           <button
             onClick={() =>
               document
-                .getElementById("expenses-section")
+                .getElementById("analytics-section")
                 ?.scrollIntoView({ behavior: "smooth" })
             }
             className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
           >
-            <FaMoneyBillWave />
-            Expenses
+            📊 Expense Analytics
+          </button>
+
+          <button
+            onClick={() =>
+              document
+                .getElementById("monthly-spending-section")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
+          >
+            📈 Monthly Spending
           </button>
 
           {/* Add Expense Button */}
@@ -311,6 +348,19 @@ const Dashboard = () => {
           >
             <FaPlus />
             Add Expense
+          </button>
+
+          {/* Expenses Button */}
+          <button
+            onClick={() =>
+              document
+                .getElementById("expenses-section")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
+          >
+            <FaMoneyBillWave />
+            Expenses
           </button>
 
         </div>
@@ -452,9 +502,9 @@ const Dashboard = () => {
                 : "text-gray-500"
                 }`}>
                 Total Expenses
-              </h3>
+              </h3 >
 
-              <p className="text-4xl font-bold mt-3">
+              <p className="text-4xl font-bold mt-3 hover:scale-105 transition-all duration-300">
                 ₹{totalExpenses}
               </p>
             </div>
@@ -592,7 +642,7 @@ const Dashboard = () => {
                 className={`mt-2 text-sm ${darkMode ? "text-gray-300" : "text-gray-600"
                   }`}
               >
-                ₹{totalExpenses} spent out of ₹{budget}
+                ₹{totalExpenses || 0} spent out of ₹{budget || 0}
               </p>
             </div>
           </div>
@@ -603,60 +653,61 @@ const Dashboard = () => {
               : "bg-white"
               }`}
           >
-
-            <h2
-              className={`text-2xl font-bold mb-5 ${darkMode ? "text-white" : "text-black"
-                }`}
-            >
-              Expense Analytics
-            </h2>
-
-            <div className="flex flex-col gap-6 item-center">
-
-              {/* Chart */}
-              <div
-                className={`lg:col-span-3 h-[420px] flex justify-center items-center p-4 rounded-2xl ${darkMode
-                  ? "bg-gray-900/40 border border-gray-700"
-                  : "bg-gray-100"
+            <div id="analytics-section">
+              <h2
+                className={`text-2xl font-bold mb-5 ${darkMode ? "text-white" : "text-black"
                   }`}
               >
+                Expense Analytics
+              </h2>
 
-                <ResponsiveContainer>
+              <div className="flex flex-col gap-6 item-center">
 
-                  <PieChart>
+                {/* Chart */}
+                <div
+                  className={`lg:col-span-3 h-[420px] flex justify-center items-center p-4 rounded-2xl cursor-pointer hover:scale-[1.01] transition ${darkMode
+                    ? "bg-gray-900/40 border border-gray-700"
+                    : "bg-gray-100"
+                    }`}
+                >
 
-                    <Pie
-                      data={categoryData}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={120}
-                      label
-                    >
+                  <ResponsiveContainer>
 
-                      {categoryData.map((_, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
+                    <PieChart>
 
-                    </Pie>
+                      <Pie
+                        data={categoryData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={120}
+                        label
+                      >
 
-                    <Tooltip />
+                        {categoryData.map((_, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
 
-                    <Legend />
+                      </Pie>
 
-                  </PieChart>
+                      <Tooltip />
 
-                </ResponsiveContainer>
+                      <Legend />
+
+                    </PieChart>
+
+                  </ResponsiveContainer>
+                </div>
 
               </div>
 
               {/* Analytics Summary */}
               <div
-                className={`p-6 rounded-2xl shadow-xl w-full flex flex-col justify-center space-y-6 ${darkMode
+                className={`mt-6 p-6 rounded-2xl shadow-xl w-full flex flex-col justify-center space-y-6 ${darkMode
                   ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                   : "bg-gray-100"
                   }`}
@@ -705,6 +756,40 @@ const Dashboard = () => {
                       ? "On Track ✅"
                       : "Budget Exceeded ❌"}
                   </h2>
+                </div>
+              </div>
+
+              <div
+                className={`mt-8 p-6 rounded-2xl shadow-lg cursor-pointer hover:scale-[1.01] transition ${darkMode
+                  ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
+                  : "bg-white"
+                  }`}
+              >
+
+                <div id="monthly-spending-section">
+                  <h2 className="text-2xl font-bold mb-5">
+                    Monthly Spending
+                  </h2>
+
+                  <div className="h-[350px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={monthlyData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+
+                        <XAxis dataKey="month" />
+
+                        <YAxis />
+
+                        <Tooltip />
+
+                        <Bar
+                          dataKey="amount"
+                          fill="#3B82F6"
+                          radius={[10, 10, 0, 0]}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
               </div>
 

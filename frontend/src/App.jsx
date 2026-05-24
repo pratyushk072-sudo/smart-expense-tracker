@@ -7,6 +7,8 @@ import {
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import MonthlySpending from "./pages/MonthlySpending";
+import Analytics from "./pages/Analytics";
 
 function App() {
 
@@ -35,6 +37,28 @@ function App() {
       <Route
         path="/register"
         element={<Register />}
+      />
+
+      <Route
+        path="/monthly-spending"
+        element={
+          token ? (
+            <MonthlySpending />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+
+      <Route
+        path="/analytics"
+        element={
+          token ? (
+            <Analytics />
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
       />
 
     </Routes>
