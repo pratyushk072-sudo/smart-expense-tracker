@@ -330,12 +330,15 @@ const Dashboard = () => {
         <div id="dashboard-section">
           {/* Navbar */}
           <div
-            className={`p-5 rounded-2xl shadow-md flex flex-col md:flex-row justify-between md:items-center gap-4 ${darkMode
-              ? "bg-gray-800"
-              : "bg-white"
+            className={`relative overflow-hidden p-6 rounded-3xl shadow-xl flex flex-col md:flex-row justify-between md:items-center gap-4 border ${darkMode
+              ? "bg-gray-800/80 border-gray-700 backdrop-blur-md"
+              : "bg-white/80 border-gray-200 backdrop-blur-md"
               }`}
           >
-            <div>
+            <div className="relative z-10">
+              <div className="absolute top-0 right-0 w-72 h-72 bg-blue-500/10 blur-3xl rounded-full"></div>
+
+              <div className="absolute bottom-0 left-20 w-56 h-56 bg-purple-500/10 blur-3xl rounded-full"></div>
               <h2
                 className={`text-3xl font-bold ${darkMode ? "text-white" : "text-black"
                   }`}
@@ -613,8 +616,8 @@ const Dashboard = () => {
               {/* Chart */}
               <div
                 className={`lg:col-span-3 h-[420px] flex justify-center items-center p-4 rounded-2xl ${darkMode
-                    ? "bg-gray-900/40 border border-gray-700"
-                    : "bg-gray-100"
+                  ? "bg-gray-900/40 border border-gray-700"
+                  : "bg-gray-100"
                   }`}
               >
 
