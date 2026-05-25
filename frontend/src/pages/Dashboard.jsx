@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import toast from "react-hot-toast";
 import { CSVLink } from "react-csv";
+import { motion } from "motion/react";
 import {
   FaMoneyBillWave,
   FaChartPie,
@@ -43,6 +44,7 @@ const Dashboard = () => {
   const [sortBy, setSortBy] = useState("newest");
   const userName = localStorage.getItem("name");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("dashboard");
 
   const [selectedMonth, setSelectedMonth] = useState(
     new Date().toISOString().slice(0, 7)
@@ -253,6 +255,37 @@ const Dashboard = () => {
     { name: "None", value: 0 }
   );
 
+  
+  const insights = [];
+
+  if (budgetUsedPercentage > 80) {
+    insights.push("⚠️ You have used more than 80% of your budget.");
+  }
+
+  if (remainingBudget > 0) {
+    insights.push(
+      `✅ Great! You still have ₹${remainingBudget} remaining this month.`
+    );
+  }
+
+  if (highestCategory.value > 0) {
+    insights.push(
+      `📊 Highest spending category is ${highestCategory.name}.`
+    );
+  }
+
+  if (averageExpense > 1000) {
+    insights.push(
+      "💸 Your average expense is quite high this month."
+    );
+  }
+
+  if (filteredExpenses.length === 0) {
+    insights.push(
+      "🧐 No expenses added yet for this month."
+    );
+  }
+
   const COLORS = [
     "#0088FE",
     "#00C49F",
@@ -282,17 +315,17 @@ const Dashboard = () => {
 
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-3 rounded-lg shadow-lg"
+        className="md:hidden fixed top-4 left-4 z-50 bg-blue-600 text-white p-3 rounded-xl shadow-2xl hover:scale-105 transition-all duration-300"
       >
         <FaBars />
       </button>
 
       <div
-        className={`fixed md:sticky top-0 left-0 h-screen z-40 transform transition-transform duration-300
+        className={`fixed md:sticky top-0 left-0 h-screen z-40 transform transition-all duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 w-64 shadow-lg p-5 ${darkMode
-            ? "bg-gray-800 text-white"
-            : "bg-white"
+          md:translate-x-0 w-72 shadow-2xl backdrop-blur-xl p-5 border-r ${darkMode
+            ? "bg-gray-900/95 text-white border-gray-800"
+            : "bg-white/95 border-gray-200"
           }`}
       >
 
@@ -304,47 +337,83 @@ const Dashboard = () => {
 
           {/* Dashboard Button */}
           <button
-            onClick={() =>
+            onClick={() => {
+              setActiveSection("dashboard");
+              setSidebarOpen(false);
+
               document
                 .getElementById("dashboard-section")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className={`flex items-center gap-3 w-full p-3 rounded-lg transition-all duration-300 ${activeSection === "dashboard"
+              ? "bg-white text-black font-semibold shadow-lg"
+              : `${darkMode
+                ? "text-white hover:bg-blue-100 hover:text-black"
+                : "text-gray-700 hover:bg-blue-100 hover:text-black"
+              }`
+              }`}
           >
             <FaChartPie />
             Dashboard
           </button>
 
           <button
-            onClick={() =>
+            onClick={() => {
+              setActiveSection("analytics");
+              setSidebarOpen(false);
+
               document
                 .getElementById("analytics-section")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className={`flex items-center gap-3 w-full p-3 rounded-lg transition-all duration-300 ${activeSection === "analytics"
+              ? "bg-white text-black font-semibold shadow-lg"
+              : `${darkMode
+                ? "text-white hover:bg-blue-100 hover:text-black"
+                : "text-black hover:bg-blue-100 hover:text-black"
+              }`
+              }`}
           >
             📊 Expense Analytics
           </button>
 
           <button
-            onClick={() =>
+            onClick={() => {
+              setActiveSection("monthly");
+              setSidebarOpen(false);
+
               document
                 .getElementById("monthly-spending-section")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className={`flex items-center gap-3 w-full p-3 rounded-lg transition-all duration-300 ${activeSection === "monthly"
+              ? "bg-white text-black font-semibold shadow-lg"
+              : `${darkMode
+                ? "text-white hover:bg-blue-100 hover:text-black"
+                : "text-black hover:bg-blue-100 hover:text-black"
+              }`
+              }`}
           >
             📈 Monthly Spending
           </button>
 
           {/* Add Expense Button */}
           <button
-            onClick={() =>
+            onClick={() => {
+              setActiveSection("add-expense");
+              setSidebarOpen(false);
+
               document
                 .getElementById("add-expense-section")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className={`flex items-center gap-3 w-full p-3 rounded-lg transition-all duration-300 ${activeSection === "add-expense"
+              ? "bg-white text-black font-semibold shadow-lg"
+              : `${darkMode
+                ? "text-white hover:bg-blue-100 hover:text-black"
+                : "text-black hover:bg-blue-100 hover:text-black"
+              }`
+              }`}
           >
             <FaPlus />
             Add Expense
@@ -352,12 +421,21 @@ const Dashboard = () => {
 
           {/* Expenses Button */}
           <button
-            onClick={() =>
+            onClick={() => {
+              setActiveSection("expenses");
+              setSidebarOpen(false);
+
               document
                 .getElementById("expenses-section")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-blue-100 hover:text-black transition"
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className={`flex items-center gap-3 w-full p-3 rounded-lg transition-all duration-300 ${activeSection === "expenses"
+              ? "bg-white text-black font-semibold shadow-lg"
+              : `${darkMode
+                ? "text-white hover:bg-blue-100 hover:text-black"
+                : "text-black hover:bg-blue-100 hover:text-black"
+              }`
+              }`}
           >
             <FaMoneyBillWave />
             Expenses
@@ -432,7 +510,11 @@ const Dashboard = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
 
-            <div
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              whileHover={{ scale: 1.03 }}
               className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
@@ -487,9 +569,13 @@ const Dashboard = () => {
 
               )}
 
-            </div>
+            </motion.div>
 
-            <div
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              whileHover={{ scale: 1.03 }}
               className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
@@ -507,9 +593,13 @@ const Dashboard = () => {
               <p className="text-4xl font-bold mt-3 hover:scale-105 transition-all duration-300">
                 ₹{totalExpenses}
               </p>
-            </div>
+            </motion.div>
 
-            <div
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              whileHover={{ scale: 1.03 }}
               className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
@@ -527,12 +617,17 @@ const Dashboard = () => {
               <p className="text-4xl font-bold mt-3">
                 ₹{thisMonthExpenses}
               </p>
-            </div>
+            </motion.div>
 
-            <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
-                ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
-                : "bg-white"
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              whileHover={{ scale: 1.03 }}
+              className={`p-6 rounded-2xl shadow-md
+                hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+                  ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
+                  : "bg-white"
                 }`}
             >
 
@@ -549,9 +644,13 @@ const Dashboard = () => {
               <p className="text-4xl font-bold mt-3">
                 ₹{remainingBudget}
               </p>
-            </div>
+            </motion.div>
 
-            <div
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              whileHover={{ scale: 1.03 }}
               className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
@@ -567,12 +666,17 @@ const Dashboard = () => {
               <p className="text-4xl font-bold mt-3">
                 ₹{averageExpense}
               </p>
-            </div>
+            </motion.div>
 
-            <div
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
-                ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
-                : "bg-white"
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              whileHover={{ scale: 1.03 }}
+              className={`p-6 rounded-2xl shadow-md 
+                hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+                  ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
+                  : "bg-white"
                 }`}
             >
 
@@ -587,7 +691,7 @@ const Dashboard = () => {
               <p className="text-2xl font-bold mt-3">
                 {highestCategory.name}
               </p>
-            </div>
+            </motion.div>
 
           </div>
 
@@ -716,46 +820,23 @@ const Dashboard = () => {
                   Insights
                 </h3>
 
-                <div>
-                  <p className="text-gray-400 text-sm">
-                    Total Transactions
-                  </p>
-
-                  <h2 className="text-3xl font-bold">
-                    {filteredExpenses.length}
-                  </h2>
-                </div>
-
-                <div>
-                  <p className="text-gray-400 text-sm">
-                    Highest Spending Category
-                  </p>
-
-                  <h2 className="text-2xl font-bold">
-                    {highestCategory.name}
-                  </h2>
-                </div>
-
-                <div>
-                  <p className="text-gray-400 text-sm">
-                    Average Expense
-                  </p>
-
-                  <h2 className="text-2xl font-bold">
-                    ₹{averageExpense}
-                  </h2>
-                </div>
-
-                <div>
-                  <p className="text-gray-400 text-sm">
-                    Budget Status
-                  </p>
-
-                  <h2 className="text-2xl font-bold text-green-400">
-                    {remainingBudget >= 0
-                      ? "On Track ✅"
-                      : "Budget Exceeded ❌"}
-                  </h2>
+                <div className="space-y-4 mt-4">
+                  {insights.map((insight, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.2 }}
+                      className={`p-4 rounded-xl border ${darkMode
+                          ? "bg-gray-800 border-gray-700"
+                          : "bg-white border-gray-200"
+                        }`}
+                    >
+                      <p className="text-lg">
+                        {insight}
+                      </p>
+                    </motion.div>
+                  ))}
                 </div>
               </div>
 

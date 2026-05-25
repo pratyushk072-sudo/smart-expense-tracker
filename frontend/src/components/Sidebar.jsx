@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaChartPie,
   FaMoneyBillWave,
@@ -7,6 +7,7 @@ import {
 } from "react-icons/fa";
 function Sidebar() {
   const navigate = useNavigate();
+  const location = useLocation();
   return (
     <div className="w-64 bg-zinc-900 h-screen p-5 border-r border-zinc-800">
       <h1 className="text-2xl font-bold text-white mb-10">
