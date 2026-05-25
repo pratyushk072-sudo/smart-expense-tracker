@@ -255,7 +255,7 @@ const Dashboard = () => {
     { name: "None", value: 0 }
   );
 
-  
+
   const insights = [];
 
   if (budgetUsedPercentage > 80) {
@@ -287,12 +287,12 @@ const Dashboard = () => {
   }
 
   const COLORS = [
-    "#0088FE",
-    "#00C49F",
-    "#FFBB28",
-    "#FF8042",
-    "#AF19FF",
-    "#FF4560",
+    "#3B82F6",
+    "#8B5CF6",
+    "#10B981",
+    "#F59E0B",
+    "#EF4444",
+    "#EC4899",
   ];
 
   const csvData = filteredExpenses.map((expense) => ({
@@ -770,8 +770,8 @@ const Dashboard = () => {
                 {/* Chart */}
                 <div
                   className={`lg:col-span-3 h-[420px] flex justify-center items-center p-4 rounded-2xl cursor-pointer hover:scale-[1.01] transition ${darkMode
-                    ? "bg-gray-900/40 border border-gray-700"
-                    : "bg-gray-100"
+                    ? "bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 hover:shadow-blue-500/20 hover:shadow-2xl"
+                    : "bg-white hover:shadow-blue-200 hover:shadow-2xl"
                     }`}
                 >
 
@@ -786,7 +786,9 @@ const Dashboard = () => {
                         cx="50%"
                         cy="50%"
                         outerRadius={120}
-                        label
+                        paddingAngle={5}
+                        cornerRadius={10}
+                        animationDuration={1200}
                       >
 
                         {categoryData.map((_, index) => (
@@ -798,9 +800,26 @@ const Dashboard = () => {
 
                       </Pie>
 
-                      <Tooltip />
+                      <Tooltip
+                        contentStyle={{
+                          borderRadius: "12px",
+                          border: "none",
+                          backgroundColor: darkMode
+                            ? "#1F2937"
+                            : "#ffffff",
+                          color: darkMode
+                            ? "#ffffff"
+                            : "#000000",
+                        }}
+                      />
 
-                      <Legend />
+                      <Legend
+                        wrapperStyle={{
+                          color: darkMode
+                            ? "#ffffff"
+                            : "#000000",
+                        }}
+                      />
 
                     </PieChart>
 
@@ -828,8 +847,8 @@ const Dashboard = () => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.2 }}
                       className={`p-4 rounded-xl border ${darkMode
-                          ? "bg-gray-800 border-gray-700"
-                          : "bg-white border-gray-200"
+                        ? "bg-gray-800 border-gray-700"
+                        : "bg-white border-gray-200"
                         }`}
                     >
                       <p className="text-lg">
@@ -848,26 +867,79 @@ const Dashboard = () => {
               >
 
                 <div id="monthly-spending-section">
-                  <h2 className="text-2xl font-bold mb-5">
-                    Monthly Spending
+                  <h2
+                    className={`text-2xl font-bold italic ${darkMode
+                      ? "text-white"
+                      : "text-gray-900"
+                      }`}
+                  >
+                    Monthly Expense Analysis
                   </h2>
 
                   <div className="h-[350px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={monthlyData}>
-                        <CartesianGrid strokeDasharray="3 3" />
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          stroke={darkMode ? "#374151" : "#D1D5DB"}
+                        />
 
-                        <XAxis dataKey="month" />
+                        <XAxis
+                          dataKey="month"
+                          tick={{
+                            fill: darkMode ? "#ffffff" : "#111827",
+                            fontSize: 14,
+                            fontWeight: 600,
+                          }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
 
-                        <YAxis />
+                        <YAxis
+                          tick={{
+                            fill: darkMode ? "#ffffff" : "#111827",
+                            fontSize: 14,
+                          }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
 
-                        <Tooltip />
+                        <Tooltip
+                          cursor={{ fill: "rgba(59,130,246,0.1)" }}
+                          contentStyle={{
+                            borderRadius: "12px",
+                            border: "none",
+                            backgroundColor: darkMode
+                              ? "#1F2937"
+                              : "#ffffff",
+                            color: darkMode
+                              ? "#ffffff"
+                              : "#000000",
+                            boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+                          }}
+                          
+                          labelStyle={{
+                            color: darkMode ? "#ffffff" : "#111827",
+                            fontWeight: "bold",
+                          }}
+                          
+                          itemStyle={{
+                            color: darkMode ? "#ffffff" : "#111827",
+                          }}
+                        />
 
                         <Bar
                           dataKey="amount"
-                          fill="#3B82F6"
-                          radius={[10, 10, 0, 0]}
-                        />
+                          radius={[12, 12, 0, 0]}
+                          animationDuration={1500}
+                        >
+                          {monthlyData.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={entry.amount > 0 ? COLORS[index % COLORS.length] : "#D1D5DB"}
+                            />
+                          ))}
+                        </Bar>
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
