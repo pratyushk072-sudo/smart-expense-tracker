@@ -31,7 +31,7 @@ const Login = () => {
             );
 
             localStorage.setItem(
-                "name", 
+                "name",
                 res.data.user.name
             );
 
@@ -94,6 +94,12 @@ const Login = () => {
                             Register
                         </a>
 
+                    </p>
+
+                    <p className="text-right mt-2">
+                        <a href="/forgot-password" className="text-blue-500">
+                            Forgot Password?
+                        </a>
                     </p>
 
                 </form>

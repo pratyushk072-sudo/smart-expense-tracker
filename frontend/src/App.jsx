@@ -9,6 +9,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MonthlySpending from "./pages/MonthlySpending";
 import Analytics from "./pages/Analytics";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
 
@@ -59,6 +61,13 @@ function App() {
             <Navigate to="/login" />
           )
         }
+      />
+
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+
+      <Route
+        path="/reset-password/:token"
+        element={<ResetPassword />}
       />
 
     </Routes>
