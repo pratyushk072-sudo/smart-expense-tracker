@@ -1,5 +1,9 @@
 import { useState } from "react";
 import API from "../api/axios";
+import {
+    FaEye,
+    FaEyeSlash,
+} from "react-icons/fa";
 
 const Register = () => {
 
@@ -8,6 +12,8 @@ const Register = () => {
         email: "",
         password: "",
     });
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         setFormData({
@@ -67,15 +73,33 @@ const Register = () => {
                         required
                     />
 
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="w-full p-3 border rounded-lg outline-none"
-                        required
-                    />
+                    <div className="relative">
+
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="w-full p-3 border rounded-lg outline-none"
+                            required
+                        />
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setShowPassword(!showPassword)
+                            }
+                            className="absolute right-3 top-3 text-gray-500"
+                        >
+                            {
+                                showPassword
+                                    ? <FaEyeSlash />
+                                    : <FaEye />
+                            }
+                        </button>
+
+                    </div>
 
                     <button
                         type="submit"

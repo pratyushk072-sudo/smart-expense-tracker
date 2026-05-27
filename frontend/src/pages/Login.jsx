@@ -1,5 +1,10 @@
 import { useState } from "react";
 import API from "../api/axios";
+import toast from "react-hot-toast";
+import {
+    FaEye,
+    FaEyeSlash,
+} from "react-icons/fa";
 
 const Login = () => {
 
@@ -7,6 +12,9 @@ const Login = () => {
         email: "",
         password: "",
     });
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setFormData({
@@ -17,6 +25,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
 
@@ -34,11 +43,14 @@ const Login = () => {
                 "name",
                 res.data.user.name
             );
+            toast.success("Login successful");
+            setLoading(false);
 
             window.location.href = "/";
 
         } catch (error) {
-            console.log(error);
+            setLoading(false);
+            toast.error("Invalid email or password");
         }
     };
 
@@ -66,21 +78,40 @@ const Login = () => {
                         required
                     />
 
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        className="w-full p-3 border rounded-lg outline-none"
-                        required
-                    />
+                    <div className="relative">
+
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="w-full p-3 border rounded-lg outline-none"
+                            required
+                        />
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setShowPassword(!showPassword)
+                            }
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500"
+                        >
+                            {
+                                showPassword
+                                    ? <FaEyeSlash />
+                                    : <FaEye />
+                            }
+                        </button>
+
+                    </div>
 
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition"
+                        disabled={loading}
+                        className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
                     >
-                        Login
+                        {loading ? "Logging in..." : "Login"}
                     </button>
 
                     <p className="text-center mt-4">

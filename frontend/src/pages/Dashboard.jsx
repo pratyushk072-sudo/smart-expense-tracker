@@ -15,6 +15,12 @@ import {
   FaPiggyBank,
   FaChartLine,
   FaShoppingCart,
+  FaInbox,
+  FaUtensils,
+  FaCar,
+  FaGamepad,
+  FaBolt,
+  FaTag,
 } from "react-icons/fa";
 import {
   PieChart,
@@ -294,6 +300,31 @@ const Dashboard = () => {
     "#EF4444",
     "#EC4899",
   ];
+
+  const getCategoryIcon = (category) => {
+
+    switch (category) {
+
+      case "Food":
+        return <FaUtensils />;
+
+      case "Transport":
+        return <FaCar />;
+
+      case "Shopping":
+        return <FaShoppingCart />;
+
+      case "Entertainment":
+        return <FaGamepad />;
+
+      case "Bills":
+        return <FaBolt />;
+
+      default:
+        return <FaTag />;
+    }
+
+  };
 
   const csvData = filteredExpenses.map((expense) => ({
     Title: expense.title,
@@ -789,6 +820,10 @@ const Dashboard = () => {
                         paddingAngle={5}
                         cornerRadius={10}
                         animationDuration={1200}
+
+                        label={({ name, value }) => `₹${value}`}
+
+                        labelLine={false}
                       >
 
                         {categoryData.map((_, index) => (
@@ -917,12 +952,12 @@ const Dashboard = () => {
                               : "#000000",
                             boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
                           }}
-                          
+
                           labelStyle={{
                             color: darkMode ? "#ffffff" : "#111827",
                             fontWeight: "bold",
                           }}
-                          
+
                           itemStyle={{
                             color: darkMode ? "#ffffff" : "#111827",
                           }}
@@ -1079,7 +1114,100 @@ const Dashboard = () => {
                 }`}
             />
 
-            <table className="w-full border-collapse">
+            <div className="md:hidden space-y-4 mb-6">
+
+              {filteredExpenses.length > 0 ? (
+
+                filteredExpenses.map((expense) => (
+
+                  <div
+                    key={expense._id}
+                    className={`p-5 rounded-2xl shadow-md ${darkMode
+                      ? "bg-gray-700 text-white"
+                      : "bg-gray-50"
+                      }`}
+                  >
+
+                    <div className="flex justify-between items-center">
+
+                      <div>
+                        <h3 className="text-lg font-bold">
+                          {expense.title}
+                        </h3>
+
+                        <p className="text-sm opacity-70">
+                          {new Date(expense.date).toLocaleDateString()}
+                        </p>
+                      </div>
+
+                      <p className="text-xl font-bold text-green-500">
+                        ₹{expense.amount}
+                      </p>
+
+                    </div>
+
+                    <div className="flex justify-between items-center mt-4">
+
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-semibold ${expense.category === "Food"
+                          ? "bg-green-100 text-green-700"
+                          : expense.category === "Transport"
+                            ? "bg-blue-100 text-blue-700"
+                            : expense.category === "Shopping"
+                              ? "bg-purple-100 text-purple-700"
+                              : expense.category === "Entertainment"
+                                ? "bg-orange-100 text-orange-700"
+                                : expense.category === "Bills"
+                                  ? "bg-red-100 text-red-700"
+                                  : "bg-gray-100 text-gray-700"
+                          }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          {getCategoryIcon(expense.category)}
+                          {expense.category}
+                        </div>
+                      </span>
+
+                      <div className="flex gap-2">
+
+                        <button
+                          onClick={() => setEditExpense(expense)}
+                          className="bg-yellow-500 text-white px-3 py-1 rounded-lg"
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          onClick={() => deleteExpense(expense._id)}
+                          className="bg-red-500 text-white px-3 py-1 rounded-lg"
+                        >
+                          Delete
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                ))
+
+              ) : (
+
+                <div
+                  className={`text-center p-8 rounded-2xl ${darkMode
+                    ? "bg-gray-700 text-gray-300"
+                    : "bg-gray-100 text-gray-500"
+                    }`}
+                >
+                  No expenses found
+                </div>
+
+              )}
+
+            </div>
+
+            <table className="hidden md:table w-full border-collapse">
 
               <thead>
                 <tr
@@ -1148,7 +1276,10 @@ const Dashboard = () => {
                                     : "bg-gray-100 text-gray-700"
                             }`}
                         >
-                          {expense.category}
+                          <span className="inline-flex items-center gap-2">
+                            {getCategoryIcon(expense.category)}
+                            {expense.category}
+                          </span>
                         </span>
                       </td>
 
@@ -1180,14 +1311,37 @@ const Dashboard = () => {
                 ) : (
 
                   <tr>
-                    <td
-                      colSpan="5"
-                      className={`text-center p-5 ${darkMode
-                        ? "text-gray-300"
-                        : "text-gray-500"
-                        }`}
-                    >
-                      No expenses found
+                    <td colSpan="5" className="p-10">
+
+                      <div className="flex flex-col items-center justify-center gap-4">
+
+                        <FaInbox
+                          className={`text-6xl ${darkMode
+                            ? "text-gray-500"
+                            : "text-gray-300"
+                            }`}
+                        />
+
+                        <p
+                          className={`text-xl font-semibold ${darkMode
+                            ? "text-gray-300"
+                            : "text-gray-500"
+                            }`}
+                        >
+                          No expenses found
+                        </p>
+
+                        <p
+                          className={`text-sm ${darkMode
+                            ? "text-gray-400"
+                            : "text-gray-400"
+                            }`}
+                        >
+                          Start adding expenses to track your spending.
+                        </p>
+
+                      </div>
+
                     </td>
                   </tr>
 

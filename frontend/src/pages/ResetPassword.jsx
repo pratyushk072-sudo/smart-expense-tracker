@@ -1,15 +1,21 @@
 import { useState } from "react";
 import axios from "axios";
 import {
-    useParams,
-    useNavigate,
-  } from "react-router-dom";
+  useParams,
+  useNavigate,
+} from "react-router-dom";
+import {
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
 
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
 
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,15 +46,33 @@ const ResetPassword = () => {
           Reset Password
         </h1>
 
-        <input
-          type="password"
-          placeholder="Enter new password"
-          className="w-full border p-3 rounded mb-4"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-        />
+        <div className="relative">
+
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter new password"
+            className="w-full border p-3 rounded mb-4"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+          />
+
+          <button
+            type="button"
+            onClick={() =>
+              setShowPassword(!showPassword)
+            }
+            className="absolute right-3 top-3 text-gray-500"
+          >
+            {
+              showPassword
+                ? <FaEyeSlash />
+                : <FaEye />
+            }
+          </button>
+
+        </div>
 
         <button
           type="submit"
