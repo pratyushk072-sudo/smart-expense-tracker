@@ -46,12 +46,17 @@ const Dashboard = () => {
   const [editExpense, setEditExpense] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
-  const savedTheme = localStorage.getItem("darkMode") === "true";
-
-  const [darkMode, setDarkMode] = useState(savedTheme);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("darkMode") === "true";
+  });
 
   useEffect(() => {
     localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
+  useEffect(() => {
+    document.body.style.backgroundColor = darkMode
+      ? "#111827"
+      : "#f3f4f6";
   }, [darkMode]);
 
   const [sortBy, setSortBy] = useState("newest");
@@ -343,9 +348,9 @@ const Dashboard = () => {
   return (
 
     <div
-      className={`min-h-screen flex pb-10 ${darkMode
-        ? "bg-gray-900"
-        : "bg-gray-100"
+      className={`min-h-screen flex pb-10 transition-colors duration-300 ${darkMode
+          ? "bg-gray-900 text-white"
+          : "bg-gray-100 text-black"
         }`}
     >
 
@@ -534,9 +539,9 @@ const Dashboard = () => {
 
                   localStorage.removeItem("token");
                   localStorage.removeItem("name");
-                
-                  navigate("/login", { replace: true });
-                
+
+                  window.location.href = "/login";
+
                 }}
                 className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
               >
