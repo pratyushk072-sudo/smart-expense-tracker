@@ -51,23 +51,19 @@ const Dashboard = () => {
   });
   useEffect(() => {
 
-    localStorage.setItem("darkMode", darkMode);
-
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-
-  }, [darkMode]);
-  useEffect(() => {
-
     const savedDarkMode =
       localStorage.getItem("darkMode") === "true";
   
     setDarkMode(savedDarkMode);
   
   }, []);
+  
+  useEffect(() => {
+  
+    localStorage.setItem("darkMode", darkMode);
+  
+  }, [darkMode]);
+  
   const [sortBy, setSortBy] = useState("newest");
   const userName = localStorage.getItem("name");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -545,8 +541,11 @@ const Dashboard = () => {
 
               <button
                 onClick={() => {
-                  localStorage.removeItem("token");
+
+                  localStorage.clear();
+
                   window.location.href = "/login";
+
                 }}
                 className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
               >
