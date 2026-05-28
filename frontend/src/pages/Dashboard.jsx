@@ -1136,7 +1136,7 @@ const Dashboard = () => {
                     key={expense._id}
                     className={`p-5 rounded-2xl shadow-md ${darkMode
                       ? "bg-gray-700 text-white"
-                      : "bg-gray-50"
+                      : "bg-white text-black"
                       }`}
                   >
 
