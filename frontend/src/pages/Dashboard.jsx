@@ -54,10 +54,10 @@ const Dashboard = () => {
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
   useEffect(() => {
-    document.body.style.backgroundColor = darkMode
-      ? "#111827"
-      : "#f3f4f6";
-  }, [darkMode]);
+  document.body.style.backgroundColor = darkMode
+    ? "#111827"
+    : "#f3f4f6";
+}, [darkMode]);
 
   const [sortBy, setSortBy] = useState("newest");
   const userName = localStorage.getItem("name");
@@ -349,8 +349,8 @@ const Dashboard = () => {
 
     <div
       className={`min-h-screen flex pb-10 transition-colors duration-300 ${darkMode
-        ? "bg-gray-900 text-white"
-        : "bg-gray-100 text-black"
+          ? "bg-gray-900 text-white"
+          : "bg-gray-100 text-black"
         }`}
     >
 
@@ -364,10 +364,9 @@ const Dashboard = () => {
       </button>
 
       <div
-        className={`fixed md:relative top-0 left-0 h-screen z-40 transform
-          transition-all duration-300 ease-in-out
+        className={`fixed md:sticky top-0 left-0 h-screen z-40 transform transition-all duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 w-64 lg:w-72 shadow-2xl backdrop-blur-xl p-5 border-r ${darkMode
+          md:translate-x-0 w-72 shadow-2xl backdrop-blur-xl p-5 border-r ${darkMode
             ? "bg-gray-900/95 text-white border-gray-800"
             : "bg-white/95 border-gray-200"
           }`}
@@ -496,10 +495,8 @@ const Dashboard = () => {
         />
       )}
 
-      <div className="hidden md:block w-20 md:w-60 lg:w-72 flex-shrink-0"></div>
-
       {/* Main Content */}
-      <div className="flex-1 p-6 overflow-hidden">
+      <div className="flex-1 p-4 md:p-6 pt-24 md:pt-6">
 
         <div id="dashboard-section">
           {/* Navbar */}
@@ -543,7 +540,7 @@ const Dashboard = () => {
                   localStorage.removeItem("token");
                   localStorage.removeItem("name");
 
-                  window.location.href = "/login";
+                  navigate("/login", { replace: true });
 
                 }}
                 className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
