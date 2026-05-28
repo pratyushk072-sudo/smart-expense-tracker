@@ -341,7 +341,7 @@ const Dashboard = () => {
   return (
 
     <div
-      className={`min-h-screen flex ${darkMode
+      className={`min-h-screen flex pb-10 ${darkMode
         ? "bg-gray-900"
         : "bg-gray-100"
         }`}
@@ -365,7 +365,7 @@ const Dashboard = () => {
           }`}
       >
 
-        <h1 className="text-3xl font-bold text-blue-600">
+        <h1 className="text-2xl md:text-3xl font-bold text-blue-600">
           Expense Tracker
         </h1>
 
@@ -489,7 +489,7 @@ const Dashboard = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-4 md:p-6 pt-24 md:pt-6">
 
         <div id="dashboard-section">
           {/* Navbar */}
@@ -504,7 +504,7 @@ const Dashboard = () => {
 
               <div className="absolute bottom-0 left-20 w-56 h-56 bg-purple-500/10 blur-3xl rounded-full"></div>
               <h2
-                className={`text-3xl font-bold ${darkMode ? "text-white" : "text-black"
+                className={`text-2xl md:text-3xl font-bold ${darkMode ? "text-white" : "text-black"
                   }`}
               >
                 Dashboard
@@ -551,7 +551,8 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
               whileHover={{ scale: 1.03 }}
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+              className={`p-4 md:p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+
                 ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
                 }`}
@@ -565,7 +566,7 @@ const Dashboard = () => {
                 Monthly Budget
               </h3>
 
-              <p className="text-4xl font-bold mt-3">
+              <p className="text-3xl md:text-4xl font-bold mt-3">
                 ₹{Number(budget)}
               </p>
 
@@ -612,7 +613,7 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               whileHover={{ scale: 1.03 }}
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+              className={`p-4 md:p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
                 }`}
@@ -626,7 +627,7 @@ const Dashboard = () => {
                 Total Expenses
               </h3 >
 
-              <p className="text-4xl font-bold mt-3 hover:scale-105 transition-all duration-300">
+              <p className="text-3xl md:text-4xl font-bold mt-3 hover:scale-105 transition-all duration-300">
                 ₹{totalExpenses}
               </p>
             </motion.div>
@@ -636,7 +637,7 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
               whileHover={{ scale: 1.03 }}
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+              className={`p-4 md:p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
                 }`}
@@ -650,7 +651,7 @@ const Dashboard = () => {
                 This Month
               </h3>
 
-              <p className="text-4xl font-bold mt-3">
+              <p className="text-3xl md:text-4xl font-bold mt-3">
                 ₹{thisMonthExpenses}
               </p>
             </motion.div>
@@ -660,7 +661,7 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
               whileHover={{ scale: 1.03 }}
-              className={`p-6 rounded-2xl shadow-md
+              className={`p-4 md:p-6 rounded-2xl shadow-md
                 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
                   ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                   : "bg-white"
@@ -677,7 +678,7 @@ const Dashboard = () => {
                 Remaining Budget
               </h3>
 
-              <p className="text-4xl font-bold mt-3">
+              <p className="text-3xl md:text-4xl font-bold mt-3">
                 ₹{remainingBudget}
               </p>
             </motion.div>
@@ -687,7 +688,7 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
               whileHover={{ scale: 1.03 }}
-              className={`p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
+              className={`p-4 md:p-6 rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
                 ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                 : "bg-white"
                 }`}
@@ -699,7 +700,7 @@ const Dashboard = () => {
                 Average Expense
               </h3>
 
-              <p className="text-4xl font-bold mt-3">
+              <p className="text-3xl md:text-4xl font-bold mt-3">
                 ₹{averageExpense}
               </p>
             </motion.div>
@@ -709,7 +710,7 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.6 }}
               whileHover={{ scale: 1.03 }}
-              className={`p-6 rounded-2xl shadow-md 
+              className={`p-4 md:p-6 rounded-2xl shadow-md 
                 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1 transition-all duration-300 ${darkMode
                   ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                   : "bg-white"
@@ -733,14 +734,14 @@ const Dashboard = () => {
 
 
           <div
-            className={`mt-8 p-6 rounded-2xl shadow-md ${darkMode
+            className={`mt-8 p-4 md:p-6 rounded-2xl shadow-md ${darkMode
               ? "bg-gray-800 text-white"
               : "bg-white"
               }`}
           >
 
             <div
-              className={`mt-6 p-6 rounded-2xl border shadow-lg ${darkMode
+              className={`mt-6 p-4 md:p-6 rounded-2xl border shadow-lg ${darkMode
                 ? "bg-gradient-to-br from-gray-700 to-gray-900 border-gray-700"
                 : "bg-white border-gray-200"
                 }`}
@@ -788,7 +789,7 @@ const Dashboard = () => {
           </div>
 
           <div
-            className={`mt-8 p-6 rounded-2xl shadow-md ${darkMode
+            className={`mt-8 p-4 md:p-6 rounded-2xl shadow-md ${darkMode
               ? "bg-gray-800 text-white"
               : "bg-white"
               }`}
@@ -805,7 +806,7 @@ const Dashboard = () => {
 
                 {/* Chart */}
                 <div
-                  className={`lg:col-span-3 h-[420px] flex justify-center items-center p-4 rounded-2xl cursor-pointer hover:scale-[1.01] transition ${darkMode
+                  className={`lg:col-span-3 h-[320px] md:h-[420px] flex justify-center items-center p-4 rounded-2xl cursor-pointer hover:scale-[1.01] transition ${darkMode
                     ? "bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700 hover:shadow-blue-500/20 hover:shadow-2xl"
                     : "bg-white hover:shadow-blue-200 hover:shadow-2xl"
                     }`}
@@ -813,7 +814,7 @@ const Dashboard = () => {
 
                   <ResponsiveContainer>
 
-                    <PieChart>
+                    <PieChart width={280} height={280}>
 
                       <Pie
                         data={categoryData}
@@ -821,7 +822,7 @@ const Dashboard = () => {
                         nameKey="name"
                         cx="50%"
                         cy="50%"
-                        outerRadius={120}
+                        outerRadius={90}
                         paddingAngle={5}
                         cornerRadius={10}
                         animationDuration={1200}
@@ -870,7 +871,7 @@ const Dashboard = () => {
 
               {/* Analytics Summary */}
               <div
-                className={`mt-6 p-6 rounded-2xl shadow-xl w-full flex flex-col justify-center space-y-6 ${darkMode
+                className={`mt-6 p-4 md:p-6 rounded-2xl shadow-xl w-full flex flex-col justify-center space-y-6 ${darkMode
                   ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                   : "bg-gray-100"
                   }`}
@@ -891,7 +892,7 @@ const Dashboard = () => {
                         : "bg-white border-gray-200"
                         }`}
                     >
-                      <p className="text-lg">
+                      <p className="text-base md:text-lg break-words">
                         {insight}
                       </p>
                     </motion.div>
@@ -900,7 +901,7 @@ const Dashboard = () => {
               </div>
 
               <div
-                className={`mt-8 p-6 rounded-2xl shadow-lg cursor-pointer hover:scale-[1.01] transition ${darkMode
+                className={`mt-8 p-4 md:p-6 rounded-2xl shadow-lg cursor-pointer hover:scale-[1.01] transition ${darkMode
                   ? "bg-gradient-to-br from-gray-700 to-gray-900 text-white"
                   : "bg-white"
                   }`}
@@ -916,7 +917,7 @@ const Dashboard = () => {
                     Monthly Expense Analysis
                   </h2>
 
-                  <div className="h-[350px]">
+                  <div className="h-[250px] md:h-[350px]">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={monthlyData}>
                         <CartesianGrid
@@ -1006,7 +1007,7 @@ const Dashboard = () => {
         </div>
         <div
           id="expenses-section"
-          className={`mt-8 p-6 rounded-2xl shadow-md ${darkMode
+          className={`mt-8 p-4 md:p-6 rounded-2xl shadow-md ${darkMode
             ? "bg-gray-800 text-white"
             : "bg-white"
             }`}
@@ -1028,7 +1029,7 @@ const Dashboard = () => {
 
           </div>
 
-          <div className="flex flex-col md:flex-row gap-4 mb-5">
+          <div className="flex flex-col md:flex-row gap-3 md:gap-4 mb-5">
 
             <input
               type="text"
