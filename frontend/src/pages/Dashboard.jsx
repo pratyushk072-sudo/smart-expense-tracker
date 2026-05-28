@@ -50,8 +50,24 @@ const Dashboard = () => {
     return localStorage.getItem("darkMode") === "true";
   });
   useEffect(() => {
+
     localStorage.setItem("darkMode", darkMode);
+
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+
   }, [darkMode]);
+  useEffect(() => {
+
+    const savedDarkMode =
+      localStorage.getItem("darkMode") === "true";
+  
+    setDarkMode(savedDarkMode);
+  
+  }, []);
   const [sortBy, setSortBy] = useState("newest");
   const userName = localStorage.getItem("name");
   const [sidebarOpen, setSidebarOpen] = useState(false);
