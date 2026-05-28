@@ -364,7 +364,7 @@ const Dashboard = () => {
       </button>
 
       <div
-        className={`fixed md:sticky top-0 left-0 h-screen z-40 transform
+        className={`fixed md:relative top-0 left-0 h-screen z-40 transform
           transition-all duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0 w-20 md:w-60 lg:w-72 shadow-2xl backdrop-blur-xl p-5 border-r ${darkMode
@@ -497,7 +497,7 @@ const Dashboard = () => {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 ml-20 md:ml-60 lg:ml-72 p-6">
+      <div className="flex-1 p-6">
 
         <div id="dashboard-section">
           {/* Navbar */}
