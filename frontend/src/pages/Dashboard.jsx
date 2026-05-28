@@ -367,7 +367,7 @@ const Dashboard = () => {
         className={`fixed md:relative top-0 left-0 h-screen z-40 transform
           transition-all duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 w-20 md:w-60 lg:w-72 shadow-2xl backdrop-blur-xl p-5 border-r ${darkMode
+          md:translate-x-0 w-64 lg:w-72 shadow-2xl backdrop-blur-xl p-5 border-r ${darkMode
             ? "bg-gray-900/95 text-white border-gray-800"
             : "bg-white/95 border-gray-200"
           }`}
@@ -496,8 +496,10 @@ const Dashboard = () => {
         />
       )}
 
+      <div className="hidden md:block w-20 md:w-60 lg:w-72 flex-shrink-0"></div>
+
       {/* Main Content */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 overflow-hidden">
 
         <div id="dashboard-section">
           {/* Navbar */}
