@@ -46,24 +46,24 @@ const Dashboard = () => {
   const [editExpense, setEditExpense] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("darkMode") === "true";
-  });
+  const savedTheme = localStorage.getItem("darkMode") === "true";
+
+  const [darkMode, setDarkMode] = useState(savedTheme);
+
   useEffect(() => {
 
-    const savedDarkMode =
-      localStorage.getItem("darkMode") === "true";
-  
-    setDarkMode(savedDarkMode);
-  
-  }, []);
-  
-  useEffect(() => {
-  
     localStorage.setItem("darkMode", darkMode);
-  
+
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+      document.body.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.body.classList.remove("dark");
+    }
+
   }, [darkMode]);
-  
+
   const [sortBy, setSortBy] = useState("newest");
   const userName = localStorage.getItem("name");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -533,7 +533,13 @@ const Dashboard = () => {
             <div className="flex items-center gap-3">
 
               <button
-                onClick={() => setDarkMode(!darkMode)}
+                onClick={() => {
+                  const newMode = !darkMode;
+
+                  setDarkMode(newMode);
+
+                  localStorage.setItem("darkMode", newMode);
+                }}
                 className="bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition"
               >
                 {darkMode ? "Light Mode" : "Dark Mode"}
@@ -542,9 +548,10 @@ const Dashboard = () => {
               <button
                 onClick={() => {
 
-                  localStorage.clear();
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("name");
 
-                  window.location.href = "/login";
+                  navigate("/login");
 
                 }}
                 className="flex items-center gap-2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
