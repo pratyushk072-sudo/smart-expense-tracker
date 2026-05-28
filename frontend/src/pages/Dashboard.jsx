@@ -46,7 +46,12 @@ const Dashboard = () => {
   const [editExpense, setEditExpense] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("darkMode") === "true";
+  });
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
   const [sortBy, setSortBy] = useState("newest");
   const userName = localStorage.getItem("name");
   const [sidebarOpen, setSidebarOpen] = useState(false);
