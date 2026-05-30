@@ -54,10 +54,10 @@ const Dashboard = () => {
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
   useEffect(() => {
-  document.body.style.backgroundColor = darkMode
-    ? "#111827"
-    : "#f3f4f6";
-}, [darkMode]);
+    document.body.style.backgroundColor = darkMode
+      ? "#111827"
+      : "#f3f4f6";
+  }, [darkMode]);
 
   const [sortBy, setSortBy] = useState("newest");
   const userName = localStorage.getItem("name");
@@ -187,25 +187,39 @@ const Dashboard = () => {
     0
   );
 
-  const currentMonth = new Date().toLocaleString("default", {
-    month: "short",
-  });
 
   const monthlyData = [
-    { month: "Jan", amount: currentMonth === "Jan" ? totalExpenses : 0 },
-    { month: "Feb", amount: currentMonth === "Feb" ? totalExpenses : 0 },
-    { month: "Mar", amount: currentMonth === "Mar" ? totalExpenses : 0 },
-    { month: "Apr", amount: currentMonth === "Apr" ? totalExpenses : 0 },
-    { month: "May", amount: currentMonth === "May" ? totalExpenses : 0 },
-    { month: "Jun", amount: currentMonth === "Jun" ? totalExpenses : 0 },
-    { month: "Jul", amount: currentMonth === "Jul" ? totalExpenses : 0 },
-    { month: "Aug", amount: currentMonth === "Aug" ? totalExpenses : 0 },
-    { month: "Sep", amount: currentMonth === "Sep" ? totalExpenses : 0 },
-    { month: "Oct", amount: currentMonth === "Oct" ? totalExpenses : 0 },
-    { month: "Nov", amount: currentMonth === "Nov" ? totalExpenses : 0 },
-    { month: "Dec", amount: currentMonth === "Dec" ? totalExpenses : 0 },
-  ];
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ].map((month, index) => {
 
+    const total = expenses
+      .filter((expense) => {
+        const expenseDate = new Date(expense.date);
+
+        return (
+          expenseDate.getMonth() === index &&
+          expenseDate.getFullYear() ===
+          new Date(selectedMonth).getFullYear()
+        );
+      })
+      .reduce((acc, expense) => acc + expense.amount, 0);
+
+    return {
+      month,
+      amount: total,
+    };
+  });
   const thisMonthExpenses = totalExpenses;
 
   const remainingBudget = Number(budget) - totalExpenses;
@@ -349,8 +363,8 @@ const Dashboard = () => {
 
     <div
       className={`min-h-screen flex pb-10 transition-colors duration-300 ${darkMode
-          ? "bg-gray-900 text-white"
-          : "bg-gray-100 text-black"
+        ? "bg-gray-900 text-white"
+        : "bg-gray-100 text-black"
         }`}
     >
 
