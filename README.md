@@ -8,7 +8,7 @@ Track your daily expenses, manage monthly budgets, analyze spending patterns, an
 
 ## 🚀 Live Demo
 
-🔗 https://smart-expense-tracker-theta-eight.vercel.app/login
+🔗 https://smart-expense-tracker-theta-eight.vercel.app
 
 ---
 
