@@ -4,12 +4,15 @@ const Budget = require("../models/Budget");
 const getBudget = async (req, res) => {
   try {
 
-    const currentDate = new Date();
+    const month = Number(req.query.month);
+    const year = Number(req.query.year);
+
+    console.log("GET:", month, year);
 
     const budget = await Budget.findOne({
       user: req.user.id,
-      month: currentDate.getMonth() + 1,
-      year: currentDate.getFullYear(),
+      month,
+      year,
     });
 
     res.json({
@@ -29,12 +32,15 @@ const getBudget = async (req, res) => {
 const updateBudget = async (req, res) => {
   try {
 
-    const currentDate = new Date();
+    console.log("BODY:", req.body);
+
+    const month = Number(req.body.month);
+    const year = Number(req.body.year);
 
     let budget = await Budget.findOne({
       user: req.user.id,
-      month: currentDate.getMonth() + 1,
-      year: currentDate.getFullYear(),
+      month,
+      year,
     });
 
     if (budget) {
@@ -47,8 +53,8 @@ const updateBudget = async (req, res) => {
 
       budget = await Budget.create({
         user: req.user.id,
-        month: currentDate.getMonth() + 1,
-        year: currentDate.getFullYear(),
+        month,
+        year,
         amount: Number(req.body.monthlyBudget),
       });
 

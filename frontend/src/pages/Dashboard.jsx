@@ -72,7 +72,11 @@ const Dashboard = () => {
   useEffect(() => {
     fetchBudget();
     fetchExpenses();
-  }, []);
+
+    setBudgetInput("");
+    setIsEditingBudget(false);
+
+  }, [selectedMonth]);
 
   const deleteExpense = async (id) => {
     try {
@@ -100,15 +104,22 @@ const Dashboard = () => {
 
   const fetchBudget = async () => {
     try {
-
-      const res = await API.get("/budget");
-
-      console.log(res.data);
-
+  
+      const [selectedYear, selectedMonthNumber] =
+        selectedMonth.split("-");
+  
+      const res = await API.get(
+        `/budget?month=${selectedMonthNumber}&year=${selectedYear}`
+      );
+  
       setBudget(
         Number(res.data.monthlyBudget || 0)
       );
-
+  
+      setBudgetInput(
+        Number(res.data.monthlyBudget || 0)
+      );
+  
     } catch (error) {
       console.log(error);
     }
@@ -117,10 +128,21 @@ const Dashboard = () => {
   const updateBudget = async () => {
     try {
 
+      const [selectedYear, selectedMonthNumber] =
+        selectedMonth.split("-");
+
+      console.log(
+        "Saving Budget:",
+        selectedMonthNumber,
+        selectedYear
+      );
+
       const res = await API.put(
         "/budget",
         {
           monthlyBudget: Number(budgetInput),
+          month: Number(selectedMonthNumber),
+          year: Number(selectedYear),
         }
       );
 
@@ -609,9 +631,20 @@ const Dashboard = () => {
 
                   <button
                     onClick={async () => {
-                      await updateBudget();
 
-                      setIsEditingBudget(false);
+                      console.log(
+                        "Current Selected Month:",
+                        selectedMonth
+                      );
+                    
+                      await updateBudget();
+                    
+                      fetchBudget();
+                    
+                      setTimeout(() => {
+                        setIsEditingBudget(false);
+                      }, 200);
+                    
                     }}
                     className="bg-blue-600 text-white px-4 rounded-lg"
                   >
@@ -1138,7 +1171,15 @@ const Dashboard = () => {
             <input
               type="month"
               value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
+              onChange={(e) => {
+                setSelectedMonth(e.target.value);
+                setIsEditingBudget(false);
+
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+              }}
               className={`border p-2 rounded mb-4 ${darkMode
                 ? "bg-gray-700 text-white border-gray-600"
                 : "bg-white"
